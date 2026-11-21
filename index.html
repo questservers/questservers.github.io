@@ -213,6 +213,13 @@
   }
   .card h3 { font-size: 15.5px; margin-bottom: 7px; }
   .card p { color: var(--muted); font-size: 13.5px; }
+  .others { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  .others .card { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .others .card p { flex: 1 1 auto; }
+  .other-by { color: #7d8b83; font-size: 12.5px; }
+  .other-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 4px; }
+  .other-meta span { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 11.5px; }
+  .others-note { margin-top: 16px; max-width: 660px; color: #7d8b83; font-size: 12.5px; }
 
   /* install */
   .steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -277,6 +284,10 @@
   .foot-meta .mono { font-size: 11px; word-break: break-all; }
   .disclaimer { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-soft); color: #6d7a72; font-size: 12px; }
 
+  @media (max-width: 1120px) {
+    .head-nav { gap: 16px; font-size: 13.5px; }
+  }
+
   @media (max-width: 960px) {
     .hero-grid { grid-template-columns: 1fr; gap: 46px; }
     .hero-art { order: 2; }
@@ -303,6 +314,7 @@
       <a href="#features">Features</a>
       <a href="#install">Install</a>
       <a href="#tutorial">Tutorial</a>
+      <a href="#others">Other extensions</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="head-actions">
@@ -488,6 +500,28 @@
           <p class="body" style="margin-top:2px"><a href="#install">Read the written steps →</a></p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="band" id="others">
+    <div class="shell">
+      <div class="band-head">
+        <p class="eyebrow">Community</p>
+        <h2>Other Mikeybox extensions</h2>
+        <p>Extensions made by other people in the community. Each one is its own download and installs the same way: extract, then chrome://extensions → Load unpacked.</p>
+      </div>
+      <div class="others">
+        <!-- To list another extension, copy this whole article and change the name, text, size, version and href. -->
+        <article class="card">
+          <div class="icon">✿</div>
+          <h3>Mikeybox Custom Themes</h3>
+          <p class="other-by">by Sakura · theme pack</p>
+          <p>51 animated themes (Deep Space Cosmos, Enhanced Sakura) plus 60 patterned colour themes, with offscreen caching so the editor keeps its frame rate.</p>
+          <div class="other-meta"><span>v8.2.0</span><span>31 KB</span><span>Manifest V3</span></div>
+          <a class="btn outline small" href="sakura-themes-8.2.0.zip" download>Download extension</a>
+        </article>
+      </div>
+      <p class="others-note">Separate community projects, not part of the toolkit. They run alongside it; the toolkit zip does not contain them.</p>
     </div>
   </section>
 
