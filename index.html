@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quest Token Generator · Quest User</title>
+  <title>Quest Token Generator · Official Portal</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,239 +11,343 @@
       padding: 0;
     }
 
+    :root {
+      --bg-deep: #07090f;
+      --bg-card: #0e1219;
+      --bg-panel: #111722;
+      --border-subtle: #1e2633;
+      --border-glow: #2a7fff;
+      --accent: #3b82f6;
+      --accent-bright: #60a5fa;
+      --accent-glow: rgba(59, 130, 246, 0.35);
+      --text-primary: #e8edf5;
+      --text-secondary: #8b98ab;
+      --text-muted: #5a6779;
+      --success: #22c55e;
+      --success-glow: rgba(34, 197, 94, 0.3);
+      --danger: #ef4444;
+      --gold: #f0b429;
+      --radius: 12px;
+      --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
     body {
-      background: linear-gradient(145deg, #1a1e2b 0%, #2a2f3f 100%);
+      background: var(--bg-deep);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(59, 130, 246, 0.06), transparent);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-      padding: 20px;
-      margin: 0;
+      font-family: var(--font);
+      padding: 24px;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
     }
 
     .card {
-      background: rgba(18, 22, 33, 0.95);
-      backdrop-filter: blur(12px);
-      border-radius: 3rem 1rem 3rem 1rem;
-      box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.8), 0 0 0 2px #ffd966, 0 0 0 6px #2e1b3a;
-      max-width: 720px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      max-width: 520px;
       width: 100%;
-      padding: 2rem 2rem 2.5rem;
-      transition: all 0.2s;
-      border: 1px solid #f0c45a;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-align: center;
-      color: #fde16d;
-      text-shadow: 4px 4px 0 #2b1d0e, 7px 7px 0 rgba(0, 0, 0, 0.3);
-      margin-top: -0.5rem;
-      margin-bottom: 0.75rem;
-      transform: rotate(-1deg);
-      word-break: break-word;
-    }
-
-    .subhead {
-      text-align: center;
-      color: #b7b7e2;
-      font-style: italic;
-      margin-bottom: 2rem;
-      font-weight: 500;
-      text-shadow: 0 2px 3px black;
-      border-bottom: 2px dashed #6d5f3a;
-      padding-bottom: 0.7rem;
-      font-size: 1.05rem;
-    }
-
-    .form-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    label {
-      font-weight: 700;
-      color: #ffda7a;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: 0.3px;
-      font-size: 1.1rem;
-      text-shadow: 0 2px 2px black;
-    }
-
-    .req-star {
-      color: #ff6b6b;
-      font-size: 1.4rem;
-      line-height: 0.5;
-      filter: drop-shadow(0 0 5px #ff3b3b);
-      font-weight: 900;
-    }
-
-    .quest-input-wrap {
+      padding: 0;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.02),
+        0 20px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 80px -20px var(--accent-glow);
+      overflow: hidden;
       position: relative;
     }
 
-    .quest-input {
-      background: #0e121c;
-      border: 2px solid #4a3f2c;
-      border-radius: 40px 10px 40px 10px;
-      padding: 0.85rem 1.3rem;
-      font-size: 1rem;
-      color: #f5e9d8;
-      outline: none;
-      transition: 0.15s;
-      font-family: inherit;
-      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 1px #181818;
+    /* top accent bar */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-bright), var(--accent), transparent);
+    }
+
+    .card-header {
+      padding: 28px 28px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 0 20px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 24px 28px 28px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .description {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .req-star {
+      color: var(--danger);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .meta-input {
       width: 100%;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      font-size: 14px;
+      font-family: var(--font);
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.18s ease;
       cursor: pointer;
       caret-color: transparent;
     }
 
-    .quest-input:focus {
-      border-color: #f7c35c;
-      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(247, 195, 92, 0.3);
-      background: #121826;
+    .meta-input::placeholder {
+      color: var(--text-muted);
     }
 
-    .quest-input.verified {
-      border-color: #4dff88;
-      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(77, 255, 136, 0.25);
-      color: #4dff88;
+    .meta-input:hover {
+      border-color: #2f3a4d;
     }
 
-    .quest-input::placeholder {
-      color: #6b6180;
-      font-style: italic;
-      font-size: 0.95rem;
+    .meta-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      background: #0c1017;
     }
 
-    .input-hint {
-      font-size: 0.75rem;
-      color: #8a7fb5;
-      padding-left: 1rem;
-      font-style: italic;
+    .meta-input.verified {
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px var(--success-glow);
+      color: var(--success);
+      cursor: default;
+      background: rgba(34, 197, 94, 0.04);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+      pointer-events: none;
+      transition: color 0.18s;
+    }
+
+    .meta-input.verified ~ .input-icon {
+      color: var(--success);
+    }
+
+    .field-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .field-hint.verified-hint {
+      color: var(--success);
+    }
+
+    .field-hint .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .field-hint.verified-hint .dot {
+      background: var(--success);
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-glow); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 4px transparent; }
     }
 
     .btn-generate {
-      background: #f7c35c;
-      border: none;
-      border-bottom: 8px solid #b17d2a;
-      color: #1d1305;
-      font-weight: 900;
-      font-size: 1.7rem;
-      letter-spacing: 2px;
-      padding: 1rem 1.5rem;
-      margin-top: 1.5rem;
-      border-radius: 50px 15px 50px 15px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: 0.1s linear;
-      font-family: inherit;
-      box-shadow: 0 10px 0 #2b1d0e, 0 8px 25px #f7c35c80;
-      transform: translateY(-2px);
       width: 100%;
+      background: linear-gradient(180deg, var(--accent-bright), var(--accent));
+      border: 1px solid #2563eb;
+      border-radius: var(--radius);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14.5px;
+      letter-spacing: 0.3px;
+      padding: 15px;
+      margin-top: 8px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 16px -4px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
     }
 
-    .btn-generate:hover {
-      background: #ffd97c;
-      transform: translateY(0px);
-      border-bottom-width: 6px;
-      box-shadow: 0 7px 0 #2b1d0e, 0 8px 30px #ffd966;
+    .btn-generate:hover:not(:disabled) {
+      background: linear-gradient(180deg, #7cb0ff, #3b82f6);
+      box-shadow: 0 6px 24px -4px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+      transform: translateY(-1px);
     }
 
-    .btn-generate:active {
-      transform: translateY(5px);
-      border-bottom-width: 2px;
-      box-shadow: 0 2px 0 #2b1d0e;
+    .btn-generate:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px -2px var(--accent-glow);
     }
 
     .btn-generate:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
-      transform: translateY(0);
-      border-bottom-width: 8px;
+      filter: grayscale(0.5);
     }
 
     .token-output {
-      margin-top: 2rem;
-      background: #0c0e14;
-      border-radius: 20px 5px 20px 5px;
-      padding: 1.5rem 1rem;
+      margin-top: 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      padding: 16px;
       text-align: center;
-      border: 2px dashed #f7c35c;
-      box-shadow: inset 0 0 25px #000000, 0 8px 0 #1e1a10;
-      word-break: break-all;
+      transition: border-color 0.3s;
+    }
+
+    .token-output.has-token {
+      border-color: var(--success);
+      box-shadow: 0 0 0 3px var(--success-glow);
     }
 
     .token-label {
-      font-size: 1rem;
+      font-size: 10.5px;
       text-transform: uppercase;
-      letter-spacing: 4px;
-      color: #ab8e4e;
-      font-weight: 300;
+      letter-spacing: 1.8px;
+      color: var(--text-muted);
+      font-weight: 700;
       margin-bottom: 10px;
     }
 
     .token-value {
-      font-family: 'Courier New', 'Fira Code', monospace;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #f7e05e;
-      text-shadow: 0 0 15px #ffbb00, 0 0 30px #ff9d00;
-      letter-spacing: 1px;
-      padding: 0.75rem 0.5rem;
-      background: #1a1a22;
-      border-radius: 12px 2px 12px 2px;
-      border: 1px solid #67511f;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--accent-bright);
+      letter-spacing: 0.5px;
       word-break: break-all;
-      line-height: 1.5;
-      min-height: 4.5rem;
+      line-height: 1.7;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .token-value:empty::before {
-      content: "✧ ✧ ✧ ✧ ✧ ✧ ✧ ✧";
-      opacity: 0.5;
-      font-weight: 300;
-      color: #5f5f7a;
-      letter-spacing: 6px;
-      font-size: 1.4rem;
+      content: "Awaiting generation…";
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0;
     }
 
-    .small-note {
-      font-size: 0.75rem;
-      color: #a79b7a;
-      text-align: right;
-      margin-top: 1rem;
-      opacity: 0.8;
-      font-style: italic;
+    .token-output.has-token .token-value {
+      color: var(--success);
     }
 
-    .glitch {
-      animation: glitch 0.1s infinite;
+    .footer-note {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.6;
     }
 
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ccff; }
-      100% { text-shadow: -2px 0 #ff0055, 2px 0 #00ccff; }
+    .footer-note strong {
+      color: var(--text-secondary);
+      font-weight: 600;
     }
 
     /* ---------- MINIGAME OVERLAY ---------- */
     .game-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(6px);
+      background: rgba(4, 6, 10, 0.88);
+      backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -253,101 +357,229 @@
 
     .game-overlay.show {
       display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .game-window {
-      background: #12161f;
-      border-radius: 2rem 0.5rem 2rem 0.5rem;
-      border: 3px solid #f7c35c;
-      box-shadow: 0 0 0 6px #2e1b3a, 0 30px 60px rgba(0,0,0,0.9);
-      padding: 1.5rem 1.5rem 1.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02),
+        0 30px 80px -20px rgba(0,0,0,0.9),
+        0 0 60px -15px var(--accent-glow);
+      padding: 24px;
       max-width: 560px;
       width: 100%;
-      text-align: center;
       position: relative;
+      overflow: hidden;
+    }
+
+    .game-window::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-bright), var(--accent), transparent);
+    }
+
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
     }
 
     .game-title {
-      color: #fde16d;
-      font-size: 1.4rem;
-      font-weight: 900;
-      letter-spacing: 2px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+
+    .game-badge {
+      font-size: 10px;
+      font-weight: 700;
       text-transform: uppercase;
-      text-shadow: 3px 3px 0 #2b1d0e;
-      margin-bottom: 0.25rem;
+      letter-spacing: 1px;
+      color: var(--accent-bright);
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 4px 10px;
+      border-radius: 6px;
     }
 
     .game-sub {
-      color: #b7b7e2;
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
-      font-style: italic;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .game-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat-box {
+      flex: 1;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .stat-value.timer-low {
+      color: var(--danger);
+      animation: timerPulse 0.5s ease-in-out infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     .game-area {
       position: relative;
-      background: #0a0d14;
-      border-radius: 16px 4px 16px 4px;
-      border: 2px solid #4a3f2c;
-      height: 320px;
-      margin-bottom: 1rem;
+      background: #060910;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      height: 340px;
+      margin-bottom: 14px;
       overflow: hidden;
       user-select: none;
       touch-action: none;
       cursor: crosshair;
     }
 
-    .target {
+    .game-area::before {
+      content: '';
       position: absolute;
-      width: 52px;
-      height: 52px;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ffd966, #f7a531 60%, #b17d2a);
-      border: 2px solid #fff3c4;
-      box-shadow: 0 0 18px #ffbb00, inset 0 0 10px #fff8d0;
+      background: radial-gradient(circle at 35% 30%, #93c5fd, #3b82f6 55%, #1d4ed8 90%);
+      border: 2px solid rgba(191, 219, 254, 0.9);
+      box-shadow:
+        0 0 20px rgba(59, 130, 246, 0.8),
+        0 0 40px rgba(59, 130, 246, 0.4),
+        inset 0 0 12px rgba(255, 255, 255, 0.5);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      color: #4a2e00;
-      font-size: 0.9rem;
-      transition: transform 0.08s;
       z-index: 2;
+      transition: transform 0.1s ease;
+      animation: orbFloat 2s ease-in-out infinite;
     }
 
-    .target:hover {
-      transform: scale(1.08);
+    .orb:hover {
+      transform: scale(1.12);
+      box-shadow:
+        0 0 28px rgba(59, 130, 246, 1),
+        0 0 50px rgba(59, 130, 246, 0.6),
+        inset 0 0 12px rgba(255, 255, 255, 0.6);
     }
 
-    .target:active {
-      transform: scale(0.9);
+    .orb:active {
+      transform: scale(0.88);
     }
 
-    .target.pop {
-      animation: pop 0.25s ease-out;
+    @keyframes orbFloat {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.25); }
     }
 
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.4); background: #4dff88; }
-      100% { transform: scale(1); }
+    .orb.boom {
+      animation: orbBoom 0.35s ease-out forwards;
+      pointer-events: none;
     }
 
-    .sparkle {
+    @keyframes orbBoom {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    .particle {
       position: absolute;
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #ffd966;
       pointer-events: none;
       z-index: 3;
-      animation: sparkleOut 0.5s ease-out forwards;
+      animation: particleOut 0.6s ease-out forwards;
     }
 
-    @keyframes sparkleOut {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(3) translateY(-20px); }
+    @keyframes particleOut {
+      0% { opacity: 1; transform: scale(1) translate(0, 0); }
+      100% { opacity: 0; transform: scale(0.3) translate(var(--tx), var(--ty)); }
+    }
+
+    .float-text {
+      position: absolute;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--success);
+      pointer-events: none;
+      z-index: 4;
+      animation: floatUp 0.8s ease-out forwards;
+      text-shadow: 0 0 10px var(--success-glow);
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .game-progress-outer {
+      height: 8px;
+      background: var(--bg-panel);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 16px;
+    }
+
+    .game-progress-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-bright), var(--success));
+      border-radius: 20px;
+      transition: width 0.15s ease;
+      box-shadow: 0 0 10px var(--accent-glow);
     }
 
     .game-footer {
@@ -355,201 +587,145 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      color: #d6cba6;
-      font-size: 0.9rem;
-      font-weight: 700;
-      flex-wrap: wrap;
-    }
-
-    .game-score {
-      color: #f7e05e;
-      font-family: 'Courier New', monospace;
-      font-size: 1rem;
-    }
-
-    .game-timer {
-      color: #ff9d9d;
-      font-family: 'Courier New', monospace;
-      font-size: 1rem;
-    }
-
-    .game-close {
-      background: #2a2f3f;
-      border: 2px solid #5b4c32;
-      color: #ffb3b3;
-      border-radius: 40px 8px 40px 8px;
-      padding: 0.45rem 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: inherit;
-      transition: 0.15s;
-    }
-
-    .game-close:hover {
-      background: #3a4055;
-      border-color: #ff6b6b;
-    }
-
-    .game-progress-outer {
-      height: 16px;
-      background: #1a1a22;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid #4a3f2c;
-      margin: 0.6rem 0 0.2rem;
-    }
-
-    .game-progress-inner {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #f7c35c, #ffd966, #4dff88);
-      border-radius: 20px;
-      transition: width 0.12s linear;
-      box-shadow: 0 0 12px #f7c35c;
-    }
-
-    .game-progress-label {
-      font-size: 0.7rem;
-      color: #8a7fb5;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
     }
 
     .game-msg {
-      min-height: 1.4rem;
-      margin-top: 0.4rem;
-      font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 20px;
+      flex: 1;
     }
 
     .game-msg.fail {
-      color: #ff6b6b;
-      text-shadow: 0 0 8px #ff000088;
+      color: var(--danger);
     }
 
     .game-msg.win {
-      color: #4dff88;
-      text-shadow: 0 0 10px #4dff88;
+      color: var(--success);
+    }
+
+    .game-msg.info {
+      color: var(--text-secondary);
+    }
+
+    .btn-close {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      font-size: 12.5px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-close:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.06);
     }
 
     @media (max-width: 480px) {
-      .card { padding: 1.5rem 1rem 2rem; }
-      h1 { font-size: 1.9rem; }
-      .token-value { font-size: 0.95rem; letter-spacing: 0.5px; }
-      .token-value:empty::before { font-size: 1rem; letter-spacing: 3px; }
-      .game-area { height: 260px; }
-      .target { width: 46px; height: 46px; }
+      .card-body { padding: 20px 18px 22px; }
+      .card-header { padding: 22px 18px 0; }
+      h1 { font-size: 19px; }
+      .game-area { height: 280px; }
+      .orb { width: 42px; height: 42px; }
+      .stat-value { font-size: 17px; }
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>⚔️ QUEST TOKEN ⚔️<br>GENERATOR</h1>
-    <div class="subhead">🔮 input your quest user to begin · all * required 🔮</div>
-
-    <form id="trollForm" class="form-grid" onsubmit="return false;">
-      <div class="field">
-        <label>👤 your quest user <span class="req-star">*</span></label>
-        <div class="quest-input-wrap">
-          <input type="text" id="questUser" class="quest-input" placeholder="click to verify your quest user..." readonly>
-        </div>
-        <div class="input-hint" id="questHint">⚡ verification minigame required — click the field to start</div>
+    <div class="card-header">
+      <div class="logo-mark">🔮</div>
+      <div class="brand-text">
+        <span class="brand-name">Quest Token Generator</span>
+        <span class="brand-sub">Official Portal</span>
       </div>
-
-      <div class="field">
-        <label>🍕 favourite pizza topping (for token seasoning) <span class="req-star">*</span></label>
-        <input type="text" id="pizza" placeholder="e.g. 'pineapple', 'regret'" required>
-      </div>
-
-      <div class="field">
-        <label>🌙 how many moons does your inner animal have? <span class="req-star">*</span></label>
-        <select id="moons" required>
-          <option value="" disabled selected>— select cosmic number —</option>
-          <option value="0">0 (denial)</option>
-          <option value="1">1 (basic)</option>
-          <option value="3">3 (spicy)</option>
-          <option value="7">7 (lucky)</option>
-          <option value="42">42 (the answer)</option>
-          <option value="∞">∞ (over 9000)</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>🤫 secret animal password (whisper it) <span class="req-star">*</span></label>
-        <input type="text" id="secret" placeholder="e.g. 'squeak', 'rawr means love'" required>
-      </div>
-
-      <div class="field">
-        <label>📜 mandatory agreements <span class="req-star">*</span></label>
-        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:0.3rem;">
-          <label style="font-weight:500; color:#d6cba6; font-size:0.9rem; display:flex; align-items:center; gap:8px; background:#1c2130; padding:0.45rem 0.9rem; border-radius:30px 6px 30px 6px; border:1px solid #5b4c32; text-shadow:none;">
-            <input type="checkbox" id="chk1" required style="width:18px;height:18px;accent-color:#f7b731;"> I won't feed the token after midnight
-          </label>
-          <label style="font-weight:500; color:#d6cba6; font-size:0.9rem; display:flex; align-items:center; gap:8px; background:#1c2130; padding:0.45rem 0.9rem; border-radius:30px 6px 30px 6px; border:1px solid #5b4c32; text-shadow:none;">
-            <input type="checkbox" id="chk2" required style="width:18px;height:18px;accent-color:#f7b731;"> I believe in squirrel conspiracy
-          </label>
-          <label style="font-weight:500; color:#d6cba6; font-size:0.9rem; display:flex; align-items:center; gap:8px; background:#1c2130; padding:0.45rem 0.9rem; border-radius:30px 6px 30px 6px; border:1px solid #5b4c32; text-shadow:none;">
-            <input type="checkbox" id="chk3" required style="width:18px;height:18px;accent-color:#f7b731;"> My animal spirit is confused
-          </label>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-generate" id="generateBtn">🔮 GENERATE TOKEN 🔮</button>
-    </form>
-
-    <div class="token-output" id="tokenOutput">
-      <div class="token-label">YOUR RANDOM-ASS 64 CHAR TOKEN</div>
-      <div class="token-value" id="tokenValue"></div>
     </div>
-    <div class="small-note">* the token is 100% real, definitely not random letters</div>
+
+    <div class="card-body">
+      <h1>Generate your Quest Token</h1>
+      <p class="description">Verify your Meta identity to receive a unique 64-character quest token for in-game rewards. This token is single-use and expires in 24 hours.</p>
+
+      <div class="field">
+        <label>Meta Username <span class="req-star">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="metaUser" class="meta-input" placeholder="Click to verify your Meta username" readonly>
+          <span class="input-icon" id="inputIcon">🔒</span>
+        </div>
+        <div class="field-hint" id="metaHint">
+          <span class="dot"></span>
+          <span>Identity verification required — click the field to begin</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-generate" id="generateBtn">Generate Token</button>
+
+      <div class="token-output" id="tokenOutput">
+        <div class="token-label">Your Quest Token</div>
+        <div class="token-value" id="tokenValue"></div>
+      </div>
+
+      <div class="footer-note">
+        <strong>Secure verification</strong> · Tokens are generated on-chain and cannot be transferred.<br>
+        By generating a token you agree to the Quest Terms of Service.
+      </div>
+    </div>
   </div>
 
   <!-- MINIGAME OVERLAY -->
   <div class="game-overlay" id="gameOverlay">
     <div class="game-window">
-      <div class="game-title">⚡ Quest Verification ⚡</div>
-      <div class="game-sub">catch 8 glowing orbs before time runs out — totally doable!</div>
+      <div class="game-header">
+        <div class="game-title">Identity Verification</div>
+        <div class="game-badge">Step 1 of 1</div>
+      </div>
+      <div class="game-sub">Pop as many energy orbs as you can before the timer ends. You need 10 to pass verification.</div>
 
-      <div class="game-area" id="gameArea">
-        <div class="target" id="target">✦</div>
+      <div class="game-stats">
+        <div class="stat-box">
+          <span class="stat-label">Orbs Popped</span>
+          <span class="stat-value" id="catchCount">0 / 10</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Time Remaining</span>
+          <span class="stat-value" id="timerText">20.0s</span>
+        </div>
       </div>
 
-      <div class="game-progress-label">verification progress</div>
+      <div class="game-area" id="gameArea"></div>
+
       <div class="game-progress-outer">
         <div class="game-progress-inner" id="gameProgress"></div>
       </div>
 
       <div class="game-footer">
-        <div class="game-score">🎯 caught: <span id="catchCount">0</span> / 8</div>
-        <div class="game-timer">⏱️ <span id="timerText">20.0</span>s</div>
-        <button class="game-close" id="closeGame">give up</button>
+        <div class="game-msg info" id="gameMsg">Orbs spawn continuously — pop them fast!</div>
+        <button class="btn-close" id="closeGame">Cancel</button>
       </div>
-
-      <div class="game-msg" id="gameMsg"></div>
     </div>
   </div>
 
   <script>
     (function() {
       // ---------- MAIN FORM ----------
-      const questInput = document.getElementById('questUser');
-      const questHint = document.getElementById('questHint');
-      const pizza = document.getElementById('pizza');
-      const moons = document.getElementById('moons');
-      const secret = document.getElementById('secret');
-      const chk1 = document.getElementById('chk1');
-      const chk2 = document.getElementById('chk2');
-      const chk3 = document.getElementById('chk3');
+      const metaInput = document.getElementById('metaUser');
+      const metaHint = document.getElementById('metaHint');
+      const inputIcon = document.getElementById('inputIcon');
       const generateBtn = document.getElementById('generateBtn');
       const tokenValue = document.getElementById('tokenValue');
-      const form = document.getElementById('trollForm');
+      const tokenOutput = document.getElementById('tokenOutput');
 
-      let questVerified = false;
-      let questUsername = '';
+      let metaVerified = false;
+      let metaUsername = '';
 
       function generateRandom64() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
         for (let i = 0; i < 64; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
         return result;
@@ -558,73 +734,144 @@
       // ---------- MINIGAME ----------
       const overlay = document.getElementById('gameOverlay');
       const gameArea = document.getElementById('gameArea');
-      const target = document.getElementById('target');
       const catchCountEl = document.getElementById('catchCount');
       const timerText = document.getElementById('timerText');
       const gameProgress = document.getElementById('gameProgress');
       const gameMsg = document.getElementById('gameMsg');
       const closeGameBtn = document.getElementById('closeGame');
 
-      const CATCH_REQUIRED = 8;
-      const TIME_LIMIT = 20; // generous
+      const CATCH_REQUIRED = 10;
+      const TIME_LIMIT = 20;
+      const SPAWN_INTERVAL = 520; // new orb every 520ms
+      const ORB_LIFETIME = 1800; // each orb lives 1.8s
 
       let caught = 0;
       let timeLeft = TIME_LIMIT;
       let gameActive = false;
       let timerId = null;
-      let moveInterval = null;
+      let spawnId = null;
+      const activeOrbs = new Set();
 
-      const MOVE_INTERVAL = 900; // target moves every 900ms — fair
-
-      function resetGame() {
-        caught = 0;
-        timeLeft = TIME_LIMIT;
-        catchCountEl.textContent = '0';
-        timerText.textContent = TIME_LIMIT.toFixed(1);
-        gameProgress.style.width = '0%';
-        gameMsg.textContent = '';
-        gameMsg.className = 'game-msg';
-        target.style.display = 'flex';
-        placeTargetRandomly();
+      function updateStats() {
+        catchCountEl.textContent = caught + ' / ' + CATCH_REQUIRED;
+        gameProgress.style.width = Math.min(100, (caught / CATCH_REQUIRED) * 100) + '%';
+        timerText.textContent = timeLeft.toFixed(1) + 's';
+        if (timeLeft <= 5) {
+          timerText.classList.add('timer-low');
+        } else {
+          timerText.classList.remove('timer-low');
+        }
       }
 
-      function placeTargetRandomly() {
+      function spawnOrb() {
+        if (!gameActive) return;
         const areaRect = gameArea.getBoundingClientRect();
-        const size = target.offsetWidth || 52;
+        const size = 46;
         const maxX = areaRect.width - size - 8;
         const maxY = areaRect.height - size - 8;
-        const x = Math.max(4, Math.random() * maxX);
-        const y = Math.max(4, Math.random() * maxY);
-        target.style.left = x + 'px';
-        target.style.top = y + 'px';
+        if (maxX < 0 || maxY < 0) return;
+
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+
+        const orb = document.createElement('div');
+        orb.className = 'orb';
+        orb.style.left = x + 'px';
+        orb.style.top = y + 'px';
+        // slight random size variation for fun
+        const scale = 0.85 + Math.random() * 0.3;
+        orb.style.transform = `scale(${scale})`;
+        gameArea.appendChild(orb);
+        activeOrbs.add(orb);
+
+        // auto-remove if not popped
+        const lifetime = setTimeout(() => {
+          if (activeOrbs.has(orb)) {
+            activeOrbs.delete(orb);
+            orb.style.transition = 'opacity 0.2s, transform 0.2s';
+            orb.style.opacity = '0';
+            orb.style.transform = `scale(${scale * 0.5})`;
+            setTimeout(() => orb.remove(), 200);
+          }
+        }, ORB_LIFETIME);
+
+        orb.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (!gameActive || !activeOrbs.has(orb)) return;
+          clearTimeout(lifetime);
+          activeOrbs.delete(orb);
+          popOrb(orb);
+        });
       }
 
-      function spawnSparkles(x, y) {
-        for (let i = 0; i < 6; i++) {
-          const s = document.createElement('div');
-          s.className = 'sparkle';
-          s.style.left = (x + Math.random() * 40 - 20) + 'px';
-          s.style.top = (y + Math.random() * 40 - 20) + 'px';
-          s.style.background = ['#ffd966', '#4dff88', '#ff9d9d'][Math.floor(Math.random() * 3)];
-          gameArea.appendChild(s);
-          setTimeout(() => s.remove(), 600);
+      function popOrb(orb) {
+        const rect = orb.getBoundingClientRect();
+        const areaRect = gameArea.getBoundingClientRect();
+        const cx = rect.left - areaRect.left + rect.width / 2;
+        const cy = rect.top - areaRect.top + rect.height / 2;
+
+        // explosion particles
+        for (let i = 0; i < 8; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          p.style.left = cx + 'px';
+          p.style.top = cy + 'px';
+          const angle = (Math.PI * 2 * i) / 8;
+          const dist = 30 + Math.random() * 30;
+          p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+          p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+          p.style.background = ['#60a5fa', '#93c5fd', '#22c55e', '#f0b429'][Math.floor(Math.random() * 4)];
+          gameArea.appendChild(p);
+          setTimeout(() => p.remove(), 700);
+        }
+
+        // floating +1
+        const ft = document.createElement('div');
+        ft.className = 'float-text';
+        ft.textContent = '+1';
+        ft.style.left = (cx - 10) + 'px';
+        ft.style.top = (cy - 10) + 'px';
+        gameArea.appendChild(ft);
+        setTimeout(() => ft.remove(), 800);
+
+        // orb boom
+        orb.classList.add('boom');
+        setTimeout(() => orb.remove(), 360);
+
+        caught++;
+        updateStats();
+
+        if (caught >= CATCH_REQUIRED) {
+          endGame(true);
         }
       }
 
       function startGame() {
-        resetGame();
+        // reset
+        caught = 0;
+        timeLeft = TIME_LIMIT;
         gameActive = true;
+        updateStats();
+        gameMsg.textContent = 'Orbs spawning — pop them fast!';
+        gameMsg.className = 'game-msg info';
+
+        // clear any leftover orbs
+        activeOrbs.forEach(o => o.remove());
+        activeOrbs.clear();
+        gameArea.querySelectorAll('.orb, .particle, .float-text').forEach(el => el.remove());
+
         overlay.classList.add('show');
 
-        moveInterval = setInterval(() => {
-          if (gameActive) placeTargetRandomly();
-        }, MOVE_INTERVAL);
+        // spawn loop
+        spawnOrb();
+        spawnId = setInterval(spawnOrb, SPAWN_INTERVAL);
 
+        // timer loop
         timerId = setInterval(() => {
           if (!gameActive) return;
           timeLeft -= 0.1;
           if (timeLeft < 0) timeLeft = 0;
-          timerText.textContent = timeLeft.toFixed(1);
+          updateStats();
           if (timeLeft <= 0) endGame(false);
         }, 100);
       }
@@ -632,85 +879,51 @@
       function endGame(won) {
         gameActive = false;
         clearInterval(timerId);
-        clearInterval(moveInterval);
+        clearInterval(spawnId);
 
         if (won) {
-          gameMsg.textContent = '✅ verified! nice catching!';
+          gameMsg.textContent = '✓ Verification passed! Nice popping.';
           gameMsg.className = 'game-msg win';
-          questVerified = true;
-          questInput.classList.add('verified');
-          questInput.value = questUsername || 'verified_quest_user';
-          questHint.textContent = '✅ quest user verified — token generator unlocked';
-          generateBtn.disabled = false;
-          setTimeout(() => overlay.classList.remove('show'), 900);
-        } else {
-          gameMsg.textContent = '❌ time\'s up! so close — try again?';
-          gameMsg.className = 'game-msg fail';
-          target.style.display = 'none';
+          metaVerified = true;
+          metaInput.classList.add('verified');
+          metaInput.value = metaUsername;
+          metaHint.classList.add('verified-hint');
+          metaHint.innerHTML = '<span class="dot"></span><span>Identity verified — you can now generate your token</span>';
+          inputIcon.textContent = '✓';
           setTimeout(() => {
-            resetGame();
-            gameActive = true;
-            timerId = setInterval(() => {
-              if (!gameActive) return;
-              timeLeft -= 0.1;
-              if (timeLeft < 0) timeLeft = 0;
-              timerText.textContent = timeLeft.toFixed(1);
-              if (timeLeft <= 0) endGame(false);
-            }, 100);
-            moveInterval = setInterval(() => {
-              if (gameActive) placeTargetRandomly();
-            }, MOVE_INTERVAL);
-            gameMsg.textContent = 'retrying... you got this!';
-            gameMsg.className = 'game-msg';
-          }, 1600);
+            overlay.classList.remove('show');
+            tokenOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 900);
+        } else {
+          gameMsg.textContent = '✗ Time\'s up — you needed ' + CATCH_REQUIRED + ' orbs. Try again?';
+          gameMsg.className = 'game-msg fail';
+          // auto-retry after a short pause
+          setTimeout(() => {
+            if (!metaVerified) startGame();
+          }, 1800);
         }
       }
-
-      target.addEventListener('click', function(e) {
-        e.stopPropagation();
-        if (!gameActive) return;
-
-        caught++;
-        catchCountEl.textContent = caught;
-        gameProgress.style.width = ((caught / CATCH_REQUIRED) * 100) + '%';
-
-        // sparkle feedback
-        const rect = target.getBoundingClientRect();
-        const areaRect = gameArea.getBoundingClientRect();
-        spawnSparkles(rect.left - areaRect.left + rect.width / 2, rect.top - areaRect.top + rect.height / 2);
-
-        // pop animation
-        target.classList.add('pop');
-        setTimeout(() => target.classList.remove('pop'), 250);
-
-        // move target after catch
-        placeTargetRandomly();
-
-        if (caught >= CATCH_REQUIRED) {
-          endGame(true);
-        }
-      });
 
       closeGameBtn.addEventListener('click', function() {
         gameActive = false;
         clearInterval(timerId);
-        clearInterval(moveInterval);
+        clearInterval(spawnId);
+        activeOrbs.forEach(o => o.remove());
+        activeOrbs.clear();
         overlay.classList.remove('show');
-        questHint.textContent = '⚡ verification cancelled — click the field to try again';
+        metaHint.innerHTML = '<span class="dot"></span><span>Identity verification cancelled — click the field to retry</span>';
       });
 
-      questInput.addEventListener('click', function() {
-        if (questVerified) {
-          questHint.textContent = '✅ already verified — you\'re good';
-          return;
-        }
-        const name = prompt('enter your quest username (any name works):');
+      // meta input click → start game
+      metaInput.addEventListener('click', function() {
+        if (metaVerified) return;
+        const name = prompt('Enter your Meta username:');
         if (name && name.trim() !== '') {
-          questUsername = name.trim();
-          questInput.value = questUsername;
+          metaUsername = name.trim();
+          metaInput.value = metaUsername;
         } else {
-          questUsername = 'anonymous_quest';
-          questInput.value = 'anonymous_quest';
+          metaUsername = 'anonymous_meta';
+          metaInput.value = 'anonymous_meta';
         }
         startGame();
       });
@@ -720,48 +933,28 @@
         e.preventDefault();
         e.stopPropagation();
 
-        if (!questVerified) {
-          alert('❌ you must verify your quest user first! click the field.');
-          questInput.click();
-          return;
-        }
-        if (!pizza.value.trim()) {
-          alert('❌ pizza topping is required. the token demands seasoning.');
-          pizza.focus();
-          return;
-        }
-        if (!moons.value) {
-          alert('❌ how many moons? the token needs cosmic alignment.');
-          moons.focus();
-          return;
-        }
-        if (!secret.value.trim()) {
-          alert('❌ whisper the secret animal password!');
-          secret.focus();
-          return;
-        }
-        if (!chk1.checked || !chk2.checked || !chk3.checked) {
-          alert('❌ all mandatory agreements must be checked!');
+        if (!metaVerified) {
+          alert('Please verify your Meta username first — click the field.');
+          metaInput.click();
           return;
         }
 
         const token = generateRandom64();
         tokenValue.textContent = token;
+        tokenOutput.classList.add('has-token');
         tokenValue.classList.add('glitch');
         setTimeout(() => tokenValue.classList.remove('glitch'), 250);
         document.getElementById('tokenOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
 
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        generateBtn.click();
-      });
-
-      questInput.addEventListener('keydown', function(e) {
+      // prevent enter key in readonly input
+      metaInput.addEventListener('keydown', function(e) {
         e.preventDefault();
       });
 
-      generateBtn.disabled = false;
+      // disable copy/paste on readonly meta field
+      metaInput.addEventListener('paste', e => e.preventDefault());
+      metaInput.addEventListener('copy', e => e.preventDefault());
     })();
   </script>
 </body>
