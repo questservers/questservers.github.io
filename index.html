@@ -43,6 +43,7 @@
       padding: 24px;
       color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
+      overflow: hidden; /* Prevent scrolling if modal is too big */
     }
 
     .card {
@@ -224,11 +225,11 @@
     }
     .footer-note strong { color: var(--text-secondary); font-weight: 600; }
 
-    /* ---------- MINIGAME OVERLAY ---------- */
+    /* ---------- CLICKER OVERLAY ---------- */
     .game-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 6, 10, 0.9);
+      background: rgba(4, 6, 10, 0.95);
       backdrop-filter: blur(10px);
       display: none;
       align-items: center;
@@ -247,11 +248,12 @@
         0 0 0 1px rgba(255,255,255,0.02),
         0 30px 80px -20px rgba(0,0,0,0.9),
         0 0 60px -15px var(--accent-glow);
-      padding: 20px;
-      max-width: 540px;
+      padding: 24px;
+      max-width: 440px;
       width: 100%;
       position: relative;
       overflow: hidden;
+      text-align: center;
     }
     .game-window::before {
       content: '';
@@ -263,100 +265,85 @@
 
     .game-header {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
-    .game-title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+    .game-title { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; text-align: left; }
     .game-badge {
       font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
       color: var(--accent-bright); background: rgba(59, 130, 246, 0.12);
       border: 1px solid rgba(59, 130, 246, 0.3);
       padding: 4px 10px; border-radius: 6px;
     }
-
+    
     .game-sub {
       font-size: 12.5px; color: var(--text-secondary);
-      margin-bottom: 12px; line-height: 1.5;
+      margin-bottom: 20px; line-height: 1.5; text-align: left;
     }
 
-    .game-stats {
-      display: flex; gap: 10px; margin-bottom: 12px;
-    }
-    .stat-box {
-      flex: 1;
+    .click-zone {
       background: var(--bg-panel);
       border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 8px 12px;
-      display: flex; flex-direction: column; gap: 2px;
-    }
-    .stat-label {
-      font-size: 9.5px; text-transform: uppercase; letter-spacing: 1.2px;
-      color: var(--text-muted); font-weight: 700;
-    }
-    .stat-value {
-      font-size: 17px; font-weight: 700; font-family: var(--mono);
-      color: var(--text-primary); line-height: 1.2;
-    }
-    .stat-value.timer-low { color: var(--danger); animation: timerPulse 0.5s ease-in-out infinite; }
-    .stat-value.checkpoint-hit { color: var(--success); }
-    @keyframes timerPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-    /* 2D CANVAS */
-    .canvas-wrap {
+      border-radius: 16px;
+      padding: 30px 20px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s;
       position: relative;
-      border-radius: 12px;
+    }
+    
+    .click-zone:active {
+      transform: scale(0.98);
+      background: #1a2233;
+    }
+
+    .click-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .click-count {
+      font-family: var(--mono);
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--accent-bright);
+      text-shadow: 0 0 20px var(--accent-glow);
+      line-height: 1;
+    }
+
+    .click-progress-outer {
+      height: 8px;
+      background: #0c1017;
+      border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--border-subtle);
-      background: #060910;
-      margin-bottom: 12px;
+      margin-top: 20px;
     }
-    #trollCanvas {
-      display: block;
-      width: 100%;
-      height: 280px;
+    .click-progress-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-bright), var(--success));
+      border-radius: 20px;
+      transition: width 0.1s ease;
     }
-    .canvas-overlay-msg {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-align: center;
-      padding: 20px;
-      background: rgba(6, 9, 16, 0.7);
-      transition: opacity 0.3s;
-      opacity: 0;
-    }
-    .canvas-overlay-msg.show { opacity: 1; }
-    .canvas-overlay-msg.win { color: var(--success); }
-    .canvas-overlay-msg.fail { color: var(--danger); }
 
-    .controls-hint {
-      display: flex; gap: 16px; justify-content: center;
-      font-size: 11px; color: var(--text-muted);
-      margin-bottom: 12px; flex-wrap: wrap;
-    }
-    .key {
-      display: inline-block;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-subtle);
-      border-bottom: 2px solid #2a3345;
-      border-radius: 5px;
-      padding: 2px 7px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-secondary);
+    .click-progress-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     .game-footer {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
-    .game-msg { font-size: 12.5px; font-weight: 600; min-height: 18px; flex: 1; }
+    
+    .game-msg { font-size: 12.5px; font-weight: 600; min-height: 18px; flex: 1; text-align: left; }
     .game-msg.fail { color: var(--danger); }
     .game-msg.win { color: var(--success); }
     .game-msg.info { color: var(--text-secondary); }
@@ -380,12 +367,111 @@
       background: rgba(239, 68, 68, 0.06);
     }
 
+    /* ---------- SECRET SETTINGS MODAL ---------- */
+    .settings-fab {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+      z-index: 100;
+    }
+    .settings-fab:hover {
+      transform: rotate(90deg) scale(1.1);
+      border-color: var(--accent);
+    }
+    .settings-fab svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--text-secondary);
+    }
+
+    .settings-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .settings-modal.show { display: flex; }
+    
+    .settings-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      width: 300px;
+      padding: 20px;
+    }
+    .settings-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+    }
+    .settings-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: background 0.15s;
+    }
+    .settings-btn:hover {
+      background: #1a2233;
+      border-color: var(--accent);
+    }
+
+    .code-input-wrap { display: none; margin-top: 10px; }
+    .code-input-wrap.show { display: block; }
+    .code-input {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 10px;
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    .code-input:focus { border-color: var(--accent); }
+    .code-submit {
+      width: 100%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .code-submit:hover { background: var(--accent-bright); }
+
     @media (max-width: 480px) {
       .card-body { padding: 20px 18px 22px; }
       .card-header { padding: 22px 18px 0; }
       h1 { font-size: 19px; }
-      #trollCanvas { height: 240px; }
-      .stat-value { font-size: 15px; }
+      .click-count { font-size: 32px; }
     }
   </style>
 </head>
@@ -429,43 +515,51 @@
     </div>
   </div>
 
-  <!-- MINIGAME OVERLAY -->
+  <!-- CLICKER OVERLAY -->
   <div class="game-overlay" id="gameOverlay">
     <div class="game-window">
       <div class="game-header">
         <div class="game-title">Identity Verification</div>
-        <div class="game-badge">Troll Runner</div>
+        <div class="game-badge">Clicker</div>
       </div>
-      <div class="game-sub">Survive for 15 seconds to verify. Use <strong>SPACE</strong> to jump over the red hazards.</div>
+      <div class="game-sub">Click the button below 1,000,000 times to verify your identity. No upgrades. Good luck.</div>
 
-      <div class="game-stats">
-        <div class="stat-box">
-          <span class="stat-label">Status</span>
-          <span class="stat-value" id="statusText">Alive</span>
+      <div class="click-zone" id="clickZone">
+        <div class="click-title">Click to verify</div>
+        <div class="click-count" id="clickCount">0</div>
+        <div class="click-progress-outer">
+          <div class="click-progress-inner" id="clickProgress"></div>
         </div>
-        <div class="stat-box">
-          <span class="stat-label">Distance</span>
-          <span class="stat-value" id="distanceText">0m</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-label">Time Left</span>
-          <span class="stat-value" id="timerText">15.0s</span>
-        </div>
-      </div>
-
-      <div class="canvas-wrap">
-        <canvas id="trollCanvas"></canvas>
-        <div class="canvas-overlay-msg" id="canvasMsg"></div>
-      </div>
-
-      <div class="controls-hint">
-        <span><span class="key">SPACE</span> to jump</span>
+        <div class="click-progress-label" id="clickProgressLabel">0% Complete</div>
       </div>
 
       <div class="game-footer">
-        <div class="game-msg info" id="gameMsg">Jump over the red obstacles. Good luck.</div>
+        <div class="game-msg info" id="gameMsg">Keep clicking.</div>
         <button class="btn-close" id="closeGame">Cancel</button>
       </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS FAB -->
+  <div class="settings-fab" id="settingsFab">
+    <svg viewBox="0 0 24 24">
+      <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+    </svg>
+  </div>
+
+  <!-- SECRET SETTINGS MODAL -->
+  <div class="settings-modal" id="settingsModal">
+    <div class="settings-content">
+      <div class="settings-title">Settings</div>
+      <button class="settings-btn" id="btnGeneral">General</button>
+      <button class="settings-btn" id="btnCode">Code</button>
+      
+      <div class="code-input-wrap" id="codeInputWrap">
+        <input type="text" class="code-input" id="codeInput" placeholder="Enter code...">
+        <button class="code-submit" id="codeSubmit">Submit</button>
+      </div>
+      
+      <button class="settings-btn" id="btnCloseSettings" style="margin-top: 16px; text-align: center; border-color: transparent; color: var(--text-muted);">Close</button>
     </div>
   </div>
 
@@ -489,130 +583,96 @@
         return result;
       }
 
-      // ---------- TROLL 2D MINIGAME ----------
+      // ---------- CLICKER MINIGAME ----------
       const overlay = document.getElementById('gameOverlay');
-      const canvas = document.getElementById('trollCanvas');
-      const ctx = canvas.getContext('2d');
-      const canvasMsg = document.getElementById('canvasMsg');
-      const statusText = document.getElementById('statusText');
-      const distanceText = document.getElementById('distanceText');
-      const timerText = document.getElementById('timerText');
+      const clickZone = document.getElementById('clickZone');
+      const clickCountEl = document.getElementById('clickCount');
+      const clickProgressEl = document.getElementById('clickProgress');
+      const clickProgressLabel = document.getElementById('clickProgressLabel');
       const gameMsg = document.getElementById('gameMsg');
       const closeGameBtn = document.getElementById('closeGame');
 
+      const TARGET_CLICKS = 1000000;
+      let currentClicks = 0;
+      let isAutoClicking = false;
+      let autoClickerInterval = null;
       let gameActive = false;
-      let gameLoop = null;
-      let timerId = null;
-      
-      let timeLeft = 15;
-      let distance = 0;
-      
-      // Player
-      const player = {
-        x: 60,
-        y: 0,
-        width: 30,
-        height: 30,
-        vy: 0,
-        jumpForce: -8,
-        gravity: 0.6,
-        grounded: true
-      };
-      
-      // Obstacles
-      let obstacles = [];
-      let spawnTimer = 0;
-      let spawnRate = 40; // frames
-      let speed = 6;
-      
-      let canvasWidth = 0;
-      let canvasHeight = 0;
-      let frameCount = 0;
 
-      function resizeCanvas() {
-        const rect = canvas.parentElement.getBoundingClientRect();
-        canvasWidth = rect.width;
-        canvasHeight = rect.height;
-        canvas.width = canvasWidth * window.devicePixelRatio;
-        canvas.height = canvasHeight * window.devicePixelRatio;
-        ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
-        
-        // Ground level
-        player.y = canvasHeight - 40;
+      function formatNumber(num) {
+        return num.toLocaleString();
       }
 
-      function resetGame() {
-        timeLeft = 15;
-        distance = 0;
-        obstacles = [];
-        spawnTimer = 0;
-        speed = 6;
-        player.y = canvasHeight - 40;
-        player.vy = 0;
-        player.grounded = true;
-        
-        statusText.textContent = 'Alive';
-        statusText.className = 'stat-value';
-        distanceText.textContent = '0m';
-        timerText.textContent = timeLeft.toFixed(1) + 's';
-        timerText.classList.remove('timer-low');
-        
-        gameMsg.textContent = 'Jump over the red obstacles. Good luck.';
-        gameMsg.className = 'game-msg info';
-        canvasMsg.classList.remove('show', 'win', 'fail');
-      }
+      function updateClickerUI() {
+        clickCountEl.textContent = formatNumber(currentClicks);
+        const percent = (currentClicks / TARGET_CLICKS) * 100;
+        clickProgressEl.style.width = percent + '%';
+        clickProgressLabel.textContent = percent.toFixed(2) + '% Complete';
 
-      function jump() {
-        if (gameActive && player.grounded) {
-          player.vy = player.jumpForce;
-          player.grounded = false;
+        if (currentClicks >= TARGET_CLICKS) {
+          winGame();
         }
       }
 
-      function failGame(reason) {
-        if (!gameActive) return;
-        gameActive = false;
-        clearInterval(timerId);
-        statusText.textContent = 'Dead';
-        statusText.className = 'stat-value timer-low';
-        gameMsg.textContent = reason + ' Retrying...';
-        gameMsg.className = 'game-msg fail';
-        canvasMsg.textContent = 'WASTED';
-        canvasMsg.className = 'canvas-overlay-msg show fail';
+      function handleClick(e) {
+        if (!gameActive || currentClicks >= TARGET_CLICKS) return;
+        
+        currentClicks++;
+        updateClickerUI();
 
-        setTimeout(() => {
-          resetGame();
-          gameActive = true;
-          canvasMsg.classList.remove('show', 'fail', 'win');
-          // start timer
-          timerId = setInterval(() => {
-            if (!gameActive) return;
-            timeLeft -= 0.1;
-            if (timeLeft < 0) timeLeft = 0;
-            timerText.textContent = timeLeft.toFixed(1) + 's';
-            if (timeLeft <= 5) timerText.classList.add('timer-low');
-            if (timeLeft <= 0) {
-              winGame();
-            }
-          }, 100);
-        }, 1500);
+        // Spawn a little +1 particle
+        const rect = clickZone.getBoundingClientRect();
+        const x = e.clientX || (rect.left + rect.width / 2);
+        const y = e.clientY || (rect.top + rect.height / 2);
+        
+        const particle = document.createElement('div');
+        particle.textContent = '+1';
+        particle.style.position = 'fixed';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.color = '#60a5fa';
+        particle.style.fontWeight = 'bold';
+        particle.style.pointerEvents = 'none';
+        particle.style.transition = 'all 0.5s ease-out';
+        particle.style.zIndex = '9999';
+        document.body.appendChild(particle);
+
+        requestAnimationFrame(() => {
+          particle.style.transform = 'translateY(-40px)';
+          particle.style.opacity = '0';
+        });
+
+        setTimeout(() => particle.remove(), 500);
+      }
+
+      function startAutoClicker() {
+        if (isAutoClicking) return;
+        isAutoClicking = true;
+        
+        autoClickerInterval = setInterval(() => {
+          if (!gameActive || currentClicks >= TARGET_CLICKS) return;
+          currentClicks += 100;
+          if (currentClicks > TARGET_CLICKS) currentClicks = TARGET_CLICKS;
+          updateClickerUI();
+          
+          // Fake clicks visually
+          clickZone.style.transform = 'scale(0.95)';
+          setTimeout(() => clickZone.style.transform = 'scale(1)', 50);
+        }, 1000);
+        
+        gameMsg.textContent = 'Auto-clicker activated (100 cps).';
+        gameMsg.className = 'game-msg win';
       }
 
       function winGame() {
-        // The troll: even if you survive, a random invisible hitbox kills you at the last second.
-        if (Math.random() < 0.9) {
-          failGame('Verification error: Token expired. (Try again)');
-          return;
-        }
-
         gameActive = false;
-        clearInterval(timerId);
-        statusText.textContent = 'Verified';
-        statusText.className = 'stat-value checkpoint-hit';
-        gameMsg.textContent = '✓ Identity verified! You are a runner legend.';
+        clearInterval(autoClickerInterval);
+        
+        clickZone.style.cursor = 'default';
+        clickProgressEl.style.background = 'var(--success)';
+        clickProgressLabel.textContent = '100.00% Verified';
+        
+        gameMsg.textContent = '✓ Identity verified! You are a clicking legend.';
         gameMsg.className = 'game-msg win';
-        canvasMsg.textContent = '✓ VERIFIED';
-        canvasMsg.className = 'canvas-overlay-msg show win';
 
         metaVerified = true;
         metaInput.classList.add('verified');
@@ -623,186 +683,31 @@
 
         setTimeout(() => {
           overlay.classList.remove('show');
-          canvasMsg.classList.remove('show', 'win');
           tokenOutput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 1400);
-      }
-
-      function update() {
-        if (!gameActive) return;
-        frameCount++;
-
-        // Update distance
-        distance += speed;
-        distanceText.textContent = Math.floor(distance) + 'm';
-
-        // Player physics
-        player.vy += player.gravity;
-        player.y += player.vy;
-
-        if (player.y >= canvasHeight - 40) {
-          player.y = canvasHeight - 40;
-          player.vy = 0;
-          player.grounded = true;
-        }
-
-        // Spawn obstacles
-        spawnTimer--;
-        if (spawnTimer <= 0) {
-          // Troll: sometimes spawn two at once, sometimes spawn them right on top of each other
-          const count = Math.random() < 0.3 ? 2 : 1;
-          for(let i = 0; i < count; i++) {
-            obstacles.push({
-              x: canvasWidth + (i * 40),
-              y: canvasHeight - 40,
-              width: 25,
-              height: 30 + Math.random() * 40 // height varies, some are impossibly tall
-            });
-          }
-          spawnTimer = spawnRate + Math.random() * 30; // erratic spawn rate
-        }
-
-        // Update obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-          const obs = obstacles[i];
-          obs.x -= speed;
-
-          // Troll: Hitbox is unfairly larger than the visual obstacle
-          const hitboxPadding = 15; 
-          const playerHitX = player.x + hitboxPadding;
-          const playerHitY = player.y + hitboxPadding;
-          const playerHitW = player.width - hitboxPadding * 2;
-          const playerHitH = player.height - hitboxPadding * 2;
-
-          const obsHitX = obs.x + hitboxPadding;
-          const obsHitY = obs.y - obs.height + hitboxPadding;
-          const obsHitW = obs.width - hitboxPadding * 2;
-          const obsHitH = obs.height - hitboxPadding * 2;
-
-          // AABB collision with troll padding
-          if (playerHitX < obsHitX + obsHitW &&
-              playerHitX + playerHitW > obsHitX &&
-              playerHitY < obsHitY + obsHitH &&
-              playerHitY + playerHitH > obsHitY) {
-            failGame('You hit an obstacle.');
-            return;
-          }
-
-          // Remove offscreen
-          if (obs.x < -100) {
-            obstacles.splice(i, 1);
-          }
-        }
-      }
-
-      function draw() {
-        const w = canvasWidth;
-        const h = canvasHeight;
-
-        // Background
-        ctx.fillStyle = '#060910';
-        ctx.fillRect(0, 0, w, h);
-
-        // Moving grid (parallax)
-        ctx.strokeStyle = 'rgba(59, 130, 246, 0.1)';
-        ctx.lineWidth = 1;
-        const offset = (distance * 2) % 40;
-        for (let x = -offset; x < w; x += 40) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0);
-          ctx.lineTo(x, h);
-          ctx.stroke();
-        }
-        for (let y = 0; y < h; y += 40) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(w, y);
-          ctx.stroke();
-        }
-
-        // Ground line
-        ctx.strokeStyle = '#1e2633';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(0, h - 10);
-        ctx.lineTo(w, h - 10);
-        ctx.stroke();
-
-        // Draw obstacles
-        obstacles.forEach(obs => {
-          ctx.fillStyle = '#ef4444'; // red
-          ctx.shadowColor = '#ef4444';
-          ctx.shadowBlur = 10;
-          ctx.fillRect(obs.x, obs.y - obs.height, obs.width, obs.height);
-          ctx.shadowBlur = 0;
-        });
-
-        // Draw player
-        ctx.fillStyle = '#3b82f6'; // blue
-        ctx.shadowColor = '#60a5fa';
-        ctx.shadowBlur = 15;
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-        ctx.shadowBlur = 0;
-
-        // Draw player "eyes" (troll face)
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(player.x + 6, player.y + 6, 6, 6);
-        ctx.fillRect(player.x + 18, player.y + 6, 6, 6);
-        ctx.fillStyle = '#000';
-        ctx.fillRect(player.x + 8, player.y + 8, 3, 3);
-        ctx.fillRect(player.x + 20, player.y + 8, 3, 3);
-      }
-
-      function loop() {
-        update();
-        draw();
-        if (overlay.classList.contains('show')) {
-          requestAnimationFrame(loop);
-        }
+        }, 1500);
       }
 
       function startGame() {
-        resetGame();
-        setTimeout(() => {
-          resizeCanvas();
-          gameActive = true;
-          overlay.classList.add('show');
-          requestAnimationFrame(loop);
-
-          timerId = setInterval(() => {
-            if (!gameActive) return;
-            timeLeft -= 0.1;
-            if (timeLeft < 0) timeLeft = 0;
-            timerText.textContent = timeLeft.toFixed(1) + 's';
-            if (timeLeft <= 5) timerText.classList.add('timer-low');
-            if (timeLeft <= 0) {
-              winGame();
-            }
-          }, 100);
-        }, 50);
+        currentClicks = 0;
+        isAutoClicking = false;
+        clearInterval(autoClickerInterval);
+        gameActive = true;
+        
+        clickZone.style.cursor = 'pointer';
+        clickProgressEl.style.background = 'linear-gradient(90deg, var(--accent), var(--accent-bright), var(--success))';
+        gameMsg.textContent = 'Keep clicking.';
+        gameMsg.className = 'game-msg info';
+        
+        updateClickerUI();
+        overlay.classList.add('show');
       }
 
-      // Input
-      window.addEventListener('keydown', (e) => {
-        if (e.key === ' ' || e.key === 'Space') {
-          if (overlay.classList.contains('show')) {
-            e.preventDefault();
-            jump();
-          }
-        }
-      });
-
-      // Touch input
-      canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        jump();
-      }, { passive: false });
+      clickZone.addEventListener('pointerdown', handleClick);
 
       closeGameBtn.addEventListener('click', function() {
         gameActive = false;
-        clearInterval(timerId);
+        clearInterval(autoClickerInterval);
         overlay.classList.remove('show');
-        canvasMsg.classList.remove('show', 'win', 'fail');
         metaHint.innerHTML = '<span class="dot"></span><span>Identity verification cancelled — click the field to retry</span>';
       });
 
@@ -817,6 +722,53 @@
           metaInput.value = 'anonymous_meta';
         }
         startGame();
+      });
+
+      // ---------- SETTINGS / SECRET CODE ----------
+      const settingsFab = document.getElementById('settingsFab');
+      const settingsModal = document.getElementById('settingsModal');
+      const btnCloseSettings = document.getElementById('btnCloseSettings');
+      const btnCode = document.getElementById('btnCode');
+      const codeInputWrap = document.getElementById('codeInputWrap');
+      const codeInput = document.getElementById('codeInput');
+      const codeSubmit = document.getElementById('codeSubmit');
+
+      settingsFab.addEventListener('click', () => {
+        settingsModal.classList.add('show');
+      });
+
+      btnCloseSettings.addEventListener('click', () => {
+        settingsModal.classList.remove('show');
+        codeInputWrap.classList.remove('show');
+        codeInput.value = '';
+      });
+
+      btnCode.addEventListener('click', () => {
+        codeInputWrap.classList.toggle('show');
+        if (codeInputWrap.classList.contains('show')) {
+          codeInput.focus();
+        }
+      });
+
+      codeSubmit.addEventListener('click', () => {
+        const val = codeInput.value.trim().toLowerCase();
+        if (val === 'autoclicker') {
+          if (gameActive) {
+            startAutoClicker();
+            settingsModal.classList.remove('show');
+            codeInputWrap.classList.remove('show');
+            codeInput.value = '';
+          } else {
+            alert('Start the verification game first!');
+          }
+        } else {
+          alert('Invalid code.');
+        }
+      });
+
+      // Allow Enter key to submit code
+      codeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') codeSubmit.click();
       });
 
       // ---------- FORM SUBMIT ----------
@@ -841,10 +793,6 @@
       metaInput.addEventListener('keydown', e => e.preventDefault());
       metaInput.addEventListener('paste', e => e.preventDefault());
       metaInput.addEventListener('copy', e => e.preventDefault());
-
-      window.addEventListener('resize', () => {
-        if (overlay.classList.contains('show') && gameActive) resizeCanvas();
-      });
     })();
   </script>
 </body>
