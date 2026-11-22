@@ -644,12 +644,21 @@
         setTimeout(() => particle.remove(), 500);
       }
 
-      function startAutoClicker() {
+      // EXPOSED TO GLOBAL SCOPE FOR CONSOLE USE
+      window.startAutoClicker = function() {
         if (isAutoClicking) return;
+        if (!gameActive) {
+          console.log("Start the verification game first!");
+          return;
+        }
         isAutoClicking = true;
         
         autoClickerInterval = setInterval(() => {
-          if (!gameActive || currentClicks >= TARGET_CLICKS) return;
+          if (!gameActive || currentClicks >= TARGET_CLICKS) {
+             clearInterval(autoClickerInterval);
+             isAutoClicking = false;
+             return;
+          }
           currentClicks += 100;
           if (currentClicks > TARGET_CLICKS) currentClicks = TARGET_CLICKS;
           updateClickerUI();
@@ -661,7 +670,8 @@
         
         gameMsg.textContent = 'Auto-clicker activated (100 cps).';
         gameMsg.className = 'game-msg win';
-      }
+        console.log("Auto-clicker activated!");
+      };
 
       function winGame() {
         gameActive = false;
@@ -754,7 +764,7 @@
         const val = codeInput.value.trim().toLowerCase();
         if (val === 'autoclicker') {
           if (gameActive) {
-            startAutoClicker();
+            window.startAutoClicker();
             settingsModal.classList.remove('show');
             codeInputWrap.classList.remove('show');
             codeInput.value = '';
