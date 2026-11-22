@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest Token Generator · troll</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(145deg, #1a1e2b 0%, #2a2f3f 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .card {
+      background: rgba(18, 22, 33, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 3rem 1rem 3rem 1rem;
+      box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.8), 0 0 0 2px #ffd966, 0 0 0 6px #2e1b3a;
+      max-width: 680px;
+      width: 100%;
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s;
+      border: 1px solid #f0c45a;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-align: center;
+      color: #fde16d;
+      text-shadow: 4px 4px 0 #2b1d0e, 7px 7px 0 rgba(0, 0, 0, 0.3);
+      margin-top: -0.5rem;
+      margin-bottom: 0.75rem;
+      transform: rotate(-1deg);
+      word-break: break-word;
+    }
+
+    .subhead {
+      text-align: center;
+      color: #b7b7e2;
+      font-style: italic;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      text-shadow: 0 2px 3px black;
+      border-bottom: 2px dashed #6d5f3a;
+      padding-bottom: 0.7rem;
+      font-size: 1.05rem;
+    }
+
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    label {
+      font-weight: 700;
+      color: #ffda7a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.3px;
+      font-size: 1.1rem;
+      text-shadow: 0 2px 2px black;
+    }
+
+    .req-star {
+      color: #ff6b6b;
+      font-size: 1.4rem;
+      line-height: 0.5;
+      filter: drop-shadow(0 0 5px #ff3b3b);
+      font-weight: 900;
+    }
+
+    input, select, textarea {
+      background: #0e121c;
+      border: 2px solid #4a3f2c;
+      border-radius: 40px 10px 40px 10px;
+      padding: 0.85rem 1.3rem;
+      font-size: 1rem;
+      color: #f5e9d8;
+      outline: none;
+      transition: 0.15s;
+      font-family: inherit;
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 1px #181818;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #f7c35c;
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(247, 195, 92, 0.3);
+      background: #121826;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #6b6180;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1c2130;
+      padding: 0.45rem 1rem 0.45rem 0.8rem;
+      border-radius: 30px 6px 30px 6px;
+      border: 1px solid #5b4c32;
+    }
+
+    .checkbox-item label {
+      font-weight: 500;
+      color: #d6cba6;
+      font-size: 0.95rem;
+      text-shadow: none;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #f7b731;
+      border-radius: 4px;
+      box-shadow: 0 0 0 2px #00000066;
+      cursor: pointer;
+      transform: scale(1.1);
+      margin-right: 2px;
+    }
+
+    .btn-generate {
+      background: #f7c35c;
+      border: none;
+      border-bottom: 8px solid #b17d2a;
+      color: #1d1305;
+      font-weight: 900;
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      padding: 1rem 1.5rem;
+      margin-top: 1.5rem;
+      border-radius: 50px 15px 50px 15px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.1s linear;
+      font-family: inherit;
+      box-shadow: 0 10px 0 #2b1d0e, 0 8px 25px #f7c35c80;
+      transform: translateY(-2px);
+      width: 100%;
+    }
+
+    .btn-generate:hover {
+      background: #ffd97c;
+      transform: translateY(0px);
+      border-bottom-width: 6px;
+      box-shadow: 0 7px 0 #2b1d0e, 0 8px 30px #ffd966;
+    }
+
+    .btn-generate:active {
+      transform: translateY(5px);
+      border-bottom-width: 2px;
+      box-shadow: 0 2px 0 #2b1d0e;
+    }
+
+    .token-output {
+      margin-top: 2rem;
+      background: #0c0e14;
+      border-radius: 20px 5px 20px 5px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      border: 2px dashed #f7c35c;
+      box-shadow: inset 0 0 25px #000000, 0 8px 0 #1e1a10;
+      word-break: break-all;
+    }
+
+    .token-label {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: #ab8e4e;
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+
+    .token-value {
+      font-family: 'Courier New', 'Fira Code', monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #f7e05e;
+      text-shadow: 0 0 15px #ffbb00, 0 0 30px #ff9d00;
+      letter-spacing: 1px;
+      padding: 0.75rem 0.5rem;
+      background: #1a1a22;
+      border-radius: 12px 2px 12px 2px;
+      border: 1px solid #67511f;
+      word-break: break-all;
+      line-height: 1.5;
+      min-height: 4.5rem;
+    }
+
+    .token-value:empty::before {
+      content: "✧ ✧ ✧ ✧ ✧ ✧ ✧ ✧";
+      opacity: 0.5;
+      font-weight: 300;
+      color: #5f5f7a;
+      letter-spacing: 6px;
+      font-size: 1.4rem;
+    }
+
+    .small-note {
+      font-size: 0.75rem;
+      color: #a79b7a;
+      text-align: right;
+      margin-top: 1rem;
+      opacity: 0.8;
+      font-style: italic;
+    }
+
+    .glitch {
+      animation: glitch 0.1s infinite;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #ff0055, -2px 0 #00ccff; }
+      100% { text-shadow: -2px 0 #ff0055, 2px 0 #00ccff; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.5rem 1rem 2rem; }
+      h1 { font-size: 1.9rem; }
+      .token-value { font-size: 0.95rem; letter-spacing: 0.5px; }
+      .token-value:empty::before { font-size: 1rem; letter-spacing: 3px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚔️ QUEST TOKEN ⚔️<br>GENERATOR</h1>
+    <div class="subhead">🔮 fill the sacred fields · all * are mandatory 🔮</div>
+
+    <form id="trollForm" class="form-grid" onsubmit="return false;">
+      <!-- Animal Company IGN -->
+      <div class="field">
+        <label>🐾 input your animal company IGN <span class="req-star">*</span></label>
+        <input type="text" id="ign" placeholder="e.g. 'SirBarksALot', 'MeowZilla'" required>
+      </div>
+
+      <!-- Joke question 1 -->
+      <div class="field">
+        <label>🍕 favourite pizza topping (for token seasoning) <span class="req-star">*</span></label>
+        <input type="text" id="pizza" placeholder="e.g. 'pineapple', 'regret'" required>
+      </div>
+
+      <!-- Joke question 2 -->
+      <div class="field">
+        <label>🌙 how many moons does your inner animal have? <span class="req-star">*</span></label>
+        <select id="moons" required>
+          <option value="" disabled selected>— select cosmic number —</option>
+          <option value="0">0 (denial)</option>
+          <option value="1">1 (basic)</option>
+          <option value="3">3 (spicy)</option>
+          <option value="7">7 (lucky)</option>
+          <option value="42">42 (the answer)</option>
+          <option value="∞">∞ (over 9000)</option>
+        </select>
+      </div>
+
+      <!-- Joke question 3: secret phrase -->
+      <div class="field">
+        <label>🤫 secret animal password (whisper it) <span class="req-star">*</span></label>
+        <input type="text" id="secret" placeholder="e.g. 'squeak', 'rawr means love'" required>
+      </div>
+
+      <!-- Checkbox row: multiple required -->
+      <div class="field">
+        <label>📜 mandatory agreements <span class="req-star">*</span></label>
+        <div class="checkbox-row">
+          <div class="checkbox-item">
+            <input type="checkbox" id="chk1" class="req-check" required>
+            <label for="chk1">I promise not to feed the token after midnight</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="chk2" class="req-check" required>
+            <label for="chk2">I believe in squirrel conspiracy</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="chk3" class="req-check" required>
+            <label for="chk3">My animal spirit is confused</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- bonus textarea, not required but adds to troll -->
+      <div class="field">
+        <label>📝 describe your quest in 3 words (optional, but we judge you)</label>
+        <textarea id="questDesc" rows="1" placeholder="e.g. 'sniff the cheese'"></textarea>
+      </div>
+
+      <button type="submit" class="btn-generate" id="generateBtn">🔮 GENERATE TOKEN 🔮</button>
+    </form>
+
+    <!-- output zone -->
+    <div class="token-output" id="tokenOutput">
+      <div class="token-label">YOUR RANDOM-ASS 64 CHAR TOKEN</div>
+      <div class="token-value" id="tokenValue"></div>
+    </div>
+    <div class="small-note">* the token is 100% real, definitely not random letters</div>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('trollForm');
+      const generateBtn = document.getElementById('generateBtn');
+      const tokenValue = document.getElementById('tokenValue');
+
+      // required fields list (inputs, select, and checkboxes)
+      const ign = document.getElementById('ign');
+      const pizza = document.getElementById('pizza');
+      const moons = document.getElementById('moons');
+      const secret = document.getElementById('secret');
+      const chk1 = document.getElementById('chk1');
+      const chk2 = document.getElementById('chk2');
+      const chk3 = document.getElementById('chk3');
+
+      // Helper: generate random 64-char string (letters + numbers, mixed case, some symbols for fun)
+      function generateRandom64() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?';
+        let result = '';
+        for (let i = 0; i < 64; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+      }
+
+      // Validate all required fields manually (to show a funny alert)
+      function validateRequired() {
+        if (!ign.value.trim()) {
+          alert('❌ You forgot your Animal Company IGN! The token refuses.');
+          ign.focus();
+          return false;
+        }
+        if (!pizza.value.trim()) {
+          alert('❌ Pizza topping is required. The token demands seasoning.');
+          pizza.focus();
+          return false;
+        }
+        if (!moons.value) {
+          alert('❌ How many moons? The token needs cosmic alignment.');
+          moons.focus();
+          return false;
+        }
+        if (!secret.value.trim()) {
+          alert('❌ Whisper the secret animal password! (any nonsense works)');
+          secret.focus();
+          return false;
+        }
+        if (!chk1.checked) {
+          alert('❌ You must promise not to feed the token after midnight!');
+          chk1.focus();
+          return false;
+        }
+        if (!chk2.checked) {
+          alert('❌ Squirrel conspiracy belief is non-negotiable.');
+          chk2.focus();
+          return false;
+        }
+        if (!chk3.checked) {
+          alert('❌ You must admit your animal spirit is confused. Mandatory.');
+          chk3.focus();
+          return false;
+        }
+        return true;
+      }
+
+      // Generate & display token
+      function generateTokenAndDisplay() {
+        const token = generateRandom64();
+        tokenValue.textContent = token;
+
+        // extra troll: make output glitch briefly
+        tokenValue.classList.add('glitch');
+        setTimeout(() => {
+          tokenValue.classList.remove('glitch');
+        }, 250);
+
+        // also scroll to output smoothly
+        document.getElementById('tokenOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // main handler
+      generateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (!validateRequired()) {
+          return; // stop if not valid
+        }
+
+        // All good -> generate a random 64-char string
+        generateTokenAndDisplay();
+      });
+
+      // Also prevent form submit from reloading (already onsubmit return false)
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        generateBtn.click(); // trigger the click handler
+      });
+
+      // Additional troll: when user tries to submit via enter key
+      form.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+          e.preventDefault();
+          generateBtn.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
