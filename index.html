@@ -15,7 +15,7 @@
       background: linear-gradient(145deg, #1a1e2b 0%, #2a2f3f 100%);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
       padding: 20px;
@@ -23,26 +23,42 @@
     }
 
     .card {
-      background: rgba(18, 22, 33, 0.9);
+      background: rgba(18, 22, 33, 0.95);
       backdrop-filter: blur(12px);
       border-radius: 3rem 1rem 3rem 1rem;
       box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.8), 0 0 0 2px #ffd966, 0 0 0 6px #2e1b3a;
-      max-width: 680px;
+      max-width: 780px;
       width: 100%;
-      padding: 2rem 2rem 2.5rem;
+      padding: 2rem 1.75rem 2.5rem;
       transition: all 0.2s;
       border: 1px solid #f0c45a;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    /* scrollbar styling */
+    .card::-webkit-scrollbar {
+      width: 10px;
+    }
+    .card::-webkit-scrollbar-track {
+      background: #0e121c;
+      border-radius: 20px;
+    }
+    .card::-webkit-scrollbar-thumb {
+      background: #f7c35c;
+      border-radius: 20px;
+      border: 2px solid #0e121c;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 900;
       letter-spacing: 1px;
       text-align: center;
       color: #fde16d;
       text-shadow: 4px 4px 0 #2b1d0e, 7px 7px 0 rgba(0, 0, 0, 0.3);
       margin-top: -0.5rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
       transform: rotate(-1deg);
       word-break: break-word;
     }
@@ -51,40 +67,111 @@
       text-align: center;
       color: #b7b7e2;
       font-style: italic;
-      margin-bottom: 2rem;
+      margin-bottom: 1.2rem;
       font-weight: 500;
       text-shadow: 0 2px 3px black;
       border-bottom: 2px dashed #6d5f3a;
       padding-bottom: 0.7rem;
-      font-size: 1.05rem;
+      font-size: 1rem;
+    }
+
+    .progress-sticky {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #0e121c;
+      padding: 0.6rem 1rem;
+      border-radius: 40px 8px 40px 8px;
+      border: 2px solid #f7c35c;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 6px 0 #2b1d0e;
+    }
+
+    .progress-text {
+      color: #ffda7a;
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .progress-bar-outer {
+      flex: 1;
+      height: 14px;
+      background: #1a1a22;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #4a3f2c;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f7c35c, #ffd966);
+      border-radius: 20px;
+      transition: width 0.2s ease;
+      box-shadow: 0 0 10px #f7c35c;
+    }
+
+    .progress-percent {
+      color: #f7e05e;
+      font-weight: 900;
+      font-size: 0.9rem;
+      min-width: 3.5rem;
+      text-align: right;
     }
 
     .form-grid {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 0.85rem;
     }
 
     .field {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.25rem;
+      padding: 0.35rem 0.5rem;
+      border-left: 3px solid transparent;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+
+    .field.missing {
+      background: rgba(255, 60, 60, 0.08);
+      border-left-color: #ff4d4d;
+    }
+
+    .field.done {
+      border-left-color: #4dff88;
     }
 
     label {
       font-weight: 700;
       color: #ffda7a;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 6px;
-      letter-spacing: 0.3px;
-      font-size: 1.1rem;
+      letter-spacing: 0.2px;
+      font-size: 0.98rem;
       text-shadow: 0 2px 2px black;
+      line-height: 1.35;
+    }
+
+    .qnum {
+      color: #8a7fb5;
+      font-weight: 800;
+      font-size: 0.82rem;
+      min-width: 2rem;
+      padding-top: 2px;
     }
 
     .req-star {
       color: #ff6b6b;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       line-height: 0.5;
       filter: drop-shadow(0 0 5px #ff3b3b);
       font-weight: 900;
@@ -94,13 +181,14 @@
       background: #0e121c;
       border: 2px solid #4a3f2c;
       border-radius: 40px 10px 40px 10px;
-      padding: 0.85rem 1.3rem;
-      font-size: 1rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.95rem;
       color: #f5e9d8;
       outline: none;
       transition: 0.15s;
       font-family: inherit;
       box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.8), 0 0 0 1px #181818;
+      width: 100%;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -109,48 +197,15 @@
       background: #121826;
     }
 
+    input.invalid, select.invalid, textarea.invalid {
+      border-color: #ff4d4d;
+      background: #1f0e0e;
+    }
+
     input::placeholder, textarea::placeholder {
       color: #6b6180;
       font-style: italic;
-      font-size: 0.95rem;
-    }
-
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-top: 0.3rem;
-      flex-wrap: wrap;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #1c2130;
-      padding: 0.45rem 1rem 0.45rem 0.8rem;
-      border-radius: 30px 6px 30px 6px;
-      border: 1px solid #5b4c32;
-    }
-
-    .checkbox-item label {
-      font-weight: 500;
-      color: #d6cba6;
-      font-size: 0.95rem;
-      text-shadow: none;
-      display: flex;
-      align-items: center;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: #f7b731;
-      border-radius: 4px;
-      box-shadow: 0 0 0 2px #00000066;
-      cursor: pointer;
-      transform: scale(1.1);
-      margin-right: 2px;
+      font-size: 0.85rem;
     }
 
     .btn-generate {
@@ -159,9 +214,9 @@
       border-bottom: 8px solid #b17d2a;
       color: #1d1305;
       font-weight: 900;
-      font-size: 1.7rem;
+      font-size: 1.5rem;
       letter-spacing: 2px;
-      padding: 1rem 1.5rem;
+      padding: 0.9rem 1.5rem;
       margin-top: 1.5rem;
       border-radius: 50px 15px 50px 15px;
       cursor: pointer;
@@ -171,6 +226,8 @@
       box-shadow: 0 10px 0 #2b1d0e, 0 8px 25px #f7c35c80;
       transform: translateY(-2px);
       width: 100%;
+      position: sticky;
+      bottom: 0;
     }
 
     .btn-generate:hover {
@@ -198,9 +255,9 @@
     }
 
     .token-label {
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       color: #ab8e4e;
       font-weight: 300;
       margin-bottom: 10px;
@@ -208,7 +265,7 @@
 
     .token-value {
       font-family: 'Courier New', 'Fira Code', monospace;
-      font-size: 1.15rem;
+      font-size: 1rem;
       font-weight: 800;
       color: #f7e05e;
       text-shadow: 0 0 15px #ffbb00, 0 0 30px #ff9d00;
@@ -218,8 +275,8 @@
       border-radius: 12px 2px 12px 2px;
       border: 1px solid #67511f;
       word-break: break-all;
-      line-height: 1.5;
-      min-height: 4.5rem;
+      line-height: 1.6;
+      min-height: 5rem;
     }
 
     .token-value:empty::before {
@@ -249,36 +306,403 @@
       100% { text-shadow: -2px 0 #ff0055, 2px 0 #00ccff; }
     }
 
+    .section-divider {
+      margin: 1.2rem 0 0.5rem;
+      text-align: center;
+      color: #f7c35c;
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 0 #2b1d0e;
+      border-top: 2px dashed #5b4c32;
+      border-bottom: 2px dashed #5b4c32;
+      padding: 0.5rem;
+      background: #12161f;
+      border-radius: 30px 5px 30px 5px;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-140%);
+      background: #ff4d4d;
+      color: #fff;
+      padding: 0.9rem 1.6rem;
+      border-radius: 50px 10px 50px 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      box-shadow: 0 8px 0 #7a1f1f, 0 15px 30px rgba(0,0,0,0.6);
+      z-index: 999;
+      transition: transform 0.25s cubic-bezier(.2,1.5,.5,1);
+      border: 2px solid #ffb3b3;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
     @media (max-width: 480px) {
-      .card { padding: 1.5rem 1rem 2rem; }
-      h1 { font-size: 1.9rem; }
-      .token-value { font-size: 0.95rem; letter-spacing: 0.5px; }
+      .card { padding: 1.2rem 0.8rem 2rem; }
+      h1 { font-size: 1.7rem; }
+      .token-value { font-size: 0.9rem; letter-spacing: 0.5px; }
       .token-value:empty::before { font-size: 1rem; letter-spacing: 3px; }
+      .btn-generate { font-size: 1.1rem; padding: 0.7rem; }
+      label { font-size: 0.88rem; }
+      .progress-text { font-size: 0.75rem; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="card">
     <h1>⚔️ QUEST TOKEN ⚔️<br>GENERATOR</h1>
-    <div class="subhead">🔮 fill the sacred fields · all * are mandatory 🔮</div>
+    <div class="subhead">🔮 answer 100+ dumb questions · all * required 🔮</div>
+
+    <div class="progress-sticky">
+      <span class="progress-text">📋 <span id="answeredCount">0</span> / <span id="totalCount">0</span> answered</span>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBar"></div>
+      </div>
+      <span class="progress-percent" id="progressPercent">0%</span>
+    </div>
 
     <form id="trollForm" class="form-grid" onsubmit="return false;">
-      <!-- Animal Company IGN -->
-      <div class="field">
-        <label>🐾 input your animal company IGN <span class="req-star">*</span></label>
-        <input type="text" id="ign" placeholder="e.g. 'SirBarksALot', 'MeowZilla'" required>
+      <div class="section-divider">➕ MATHS (dumbed down) ➕</div>
+      <!-- MATHS QUESTIONS 1-35 -->
+      <!-- 1 -->
+      <div class="field" data-qid="1">
+        <label><span class="qnum">1.</span> 🐾 input your animal company IGN <span class="req-star">*</span></label>
+        <input type="text" id="ign" placeholder="e.g. 'SirBarksALot'" data-required="true">
+      </div>
+      <!-- 2 -->
+      <div class="field" data-qid="2">
+        <label><span class="qnum">2.</span> ➕ what is 1 + 1? (careful, it's tricky) <span class="req-star">*</span></label>
+        <input type="text" id="q2" placeholder="type a number... or a feeling" data-required="true">
+      </div>
+      <!-- 3 -->
+      <div class="field" data-qid="3">
+        <label><span class="qnum">3.</span> ➕ what is 2 + 2? (no calculators, please) <span class="req-star">*</span></label>
+        <input type="text" id="q3" placeholder="e.g. '4', 'fish'" data-required="true">
+      </div>
+      <!-- 4 -->
+      <div class="field" data-qid="4">
+        <label><span class="qnum">4.</span> ➕ if you have 3 apples and eat 2, how many apples do you have? <span class="req-star">*</span></label>
+        <input type="text" id="q4" placeholder="apples, regrets, whatever" data-required="true">
+      </div>
+      <!-- 5 -->
+      <div class="field" data-qid="5">
+        <label><span class="qnum">5.</span> ➕ what shape has 3 sides? (hint: it's a triangle, but act surprised) <span class="req-star">*</span></label>
+        <input type="text" id="q5" placeholder="e.g. 'triangle', 'pizza slice'" data-required="true">
+      </div>
+      <!-- 6 -->
+      <div class="field" data-qid="6">
+        <label><span class="qnum">6.</span> ➕ how many sides does a square have? (it's not 5) <span class="req-star">*</span></label>
+        <input type="text" id="q6" placeholder="square sides..." data-required="true">
+      </div>
+      <!-- 7 -->
+      <div class="field" data-qid="7">
+        <label><span class="qnum">7.</span> ➕ what is 10 - 5? (big brain time) <span class="req-star">*</span></label>
+        <input type="text" id="q7" placeholder="numbers please" data-required="true">
+      </div>
+      <!-- 8 -->
+      <div class="field" data-qid="8">
+        <label><span class="qnum">8.</span> ➕ is 0 an even number? (yes or no, we don't judge) <span class="req-star">*</span></label>
+        <select id="q8" data-required="true">
+          <option value="" disabled selected>— pick one —</option>
+          <option value="yes">yes (I think)</option>
+          <option value="no">no (chaos)</option>
+          <option value="maybe">maybe (existential)</option>
+        </select>
+      </div>
+      <!-- 9 -->
+      <div class="field" data-qid="9">
+        <label><span class="qnum">9.</span> ➕ what is 5 × 2? (use your fingers if needed) <span class="req-star">*</span></label>
+        <input type="text" id="q9" placeholder="multiply... carefully" data-required="true">
+      </div>
+      <!-- 10 -->
+      <div class="field" data-qid="10">
+        <label><span class="qnum">10.</span> ➕ if a pizza has 8 slices and you eat 8, how many are left? <span class="req-star">*</span></label>
+        <input type="text" id="q10" placeholder="sadness" data-required="true">
+      </div>
+      <!-- 11 -->
+      <div class="field" data-qid="11">
+        <label><span class="qnum">11.</span> ➕ what comes after 9? (counting is hard) <span class="req-star">*</span></label>
+        <input type="text" id="q11" placeholder="the next number..." data-required="true">
+      </div>
+      <!-- 12 -->
+      <div class="field" data-qid="12">
+        <label><span class="qnum">12.</span> ➕ how many legs does a dog have? (most of them) <span class="req-star">*</span></label>
+        <input type="text" id="q12" placeholder="legs..." data-required="true">
+      </div>
+      <!-- 13 -->
+      <div class="field" data-qid="13">
+        <label><span class="qnum">13.</span> ➕ is 7 a prime number? (or just weird?) <span class="req-star">*</span></label>
+        <select id="q13" data-required="true">
+          <option value="" disabled selected>— pick one —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="idk">idk what prime means</option>
+        </select>
+      </div>
+      <!-- 14 -->
+      <div class="field" data-qid="14">
+        <label><span class="qnum">14.</span> ➕ what is half of 10? (not a trick, maybe) <span class="req-star">*</span></label>
+        <input type="text" id="q14" placeholder="half..." data-required="true">
+      </div>
+      <!-- 15 -->
+      <div class="field" data-qid="15">
+        <label><span class="qnum">15.</span> ➕ how many seconds in a minute? (roughly) <span class="req-star">*</span></label>
+        <input type="text" id="q15" placeholder="seconds..." data-required="true">
+      </div>
+      <!-- 16 -->
+      <div class="field" data-qid="16">
+        <label><span class="qnum">16.</span> ➕ what is 100 - 1? (don't overthink) <span class="req-star">*</span></label>
+        <input type="text" id="q16" placeholder="almost 100" data-required="true">
+      </div>
+      <!-- 17 -->
+      <div class="field" data-qid="17">
+        <label><span class="qnum">17.</span> ➕ if you have 2 cats and get 2 more, how many cats? <span class="req-star">*</span></label>
+        <input type="text" id="q17" placeholder="cat math" data-required="true">
+      </div>
+      <!-- 18 -->
+      <div class="field" data-qid="18">
+        <label><span class="qnum">18.</span> ➕ what's bigger: 5 or 3? (choose wisely) <span class="req-star">*</span></label>
+        <select id="q18" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="5">5</option>
+          <option value="3">3</option>
+          <option value="equal">they're the same (wrong)</option>
+        </select>
+      </div>
+      <!-- 19 -->
+      <div class="field" data-qid="19">
+        <label><span class="qnum">19.</span> ➕ how many wheels does a bicycle have? <span class="req-star">*</span></label>
+        <input type="text" id="q19" placeholder="wheels..." data-required="true">
+      </div>
+      <!-- 20 -->
+      <div class="field" data-qid="20">
+        <label><span class="qnum">20.</span> ➕ what is 3 × 3? (the answer is 9 but pretend you're thinking) <span class="req-star">*</span></label>
+        <input type="text" id="q20" placeholder="times tables" data-required="true">
       </div>
 
-      <!-- Joke question 1 -->
-      <div class="field">
-        <label>🍕 favourite pizza topping (for token seasoning) <span class="req-star">*</span></label>
-        <input type="text" id="pizza" placeholder="e.g. 'pineapple', 'regret'" required>
+      <div class="section-divider">📖 ENGLISH (dumbed down) 📖</div>
+      <!-- ENGLISH 21-50 -->
+      <div class="field" data-qid="21">
+        <label><span class="qnum">21.</span> 📖 what letter comes after A? (the alphabet is hard) <span class="req-star">*</span></label>
+        <input type="text" id="q21" placeholder="one letter" data-required="true">
+      </div>
+      <div class="field" data-qid="22">
+        <label><span class="qnum">22.</span> 📖 how many letters are in the word "cat"? <span class="req-star">*</span></label>
+        <input type="text" id="q22" placeholder="count them" data-required="true">
+      </div>
+      <div class="field" data-qid="23">
+        <label><span class="qnum">23.</span> 📖 is "dog" a noun or a verb? (no pressure) <span class="req-star">*</span></label>
+        <select id="q23" data-required="true">
+          <option value="" disabled selected>— choose —</option>
+          <option value="noun">noun</option>
+          <option value="verb">verb</option>
+          <option value="both">both (chaos answer)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="24">
+        <label><span class="qnum">24.</span> 📖 what is the plural of "mouse"? (not mouses) <span class="req-star">*</span></label>
+        <input type="text" id="q24" placeholder="plural mouse" data-required="true">
+      </div>
+      <div class="field" data-qid="25">
+        <label><span class="qnum">25.</span> 📖 spell the word "fish" backwards <span class="req-star">*</span></label>
+        <input type="text" id="q25" placeholder="backwards fish" data-required="true">
+      </div>
+      <div class="field" data-qid="26">
+        <label><span class="qnum">26.</span> 📖 what is the opposite of "hot"? (ice cold) <span class="req-star">*</span></label>
+        <input type="text" id="q26" placeholder="opposite of hot" data-required="true">
+      </div>
+      <div class="field" data-qid="27">
+        <label><span class="qnum">27.</span> 📖 how many syllables in "banana"? (ba-na-na) <span class="req-star">*</span></label>
+        <input type="text" id="q27" placeholder="syllables" data-required="true">
+      </div>
+      <div class="field" data-qid="28">
+        <label><span class="qnum">28.</span> 📖 does "orange" rhyme with anything? (be honest) <span class="req-star">*</span></label>
+        <select id="q28" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes (door hinge)</option>
+          <option value="no">no (sad)</option>
+          <option value="maybe">maybe (philosophical)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="29">
+        <label><span class="qnum">29.</span> 📖 what punctuation mark ends a question? <span class="req-star">*</span></label>
+        <input type="text" id="q29" placeholder="punctuation..." data-required="true">
+      </div>
+      <div class="field" data-qid="30">
+        <label><span class="qnum">30.</span> 📖 is "run" a verb? (yes, but confirm) <span class="req-star">*</span></label>
+        <select id="q30" data-required="true">
+          <option value="" disabled selected>— choose —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="sometimes">sometimes</option>
+        </select>
+      </div>
+      <div class="field" data-qid="31">
+        <label><span class="qnum">31.</span> 📖 what is the first letter of the word "apple"? <span class="req-star">*</span></label>
+        <input type="text" id="q31" placeholder="one letter" data-required="true">
+      </div>
+      <div class="field" data-qid="32">
+        <label><span class="qnum">32.</span> 📖 how many words are in "I like cheese"? <span class="req-star">*</span></label>
+        <input type="text" id="q32" placeholder="count words" data-required="true">
+      </div>
+      <div class="field" data-qid="33">
+        <label><span class="qnum">33.</span> 📖 is "happy" a positive or negative word? <span class="req-star">*</span></label>
+        <select id="q33" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="positive">positive</option>
+          <option value="negative">negative</option>
+          <option value="neutral">neutral (weird)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="34">
+        <label><span class="qnum">34.</span> 📖 what does "onomatopoeia" mean? (just guess) <span class="req-star">*</span></label>
+        <input type="text" id="q34" placeholder="sound words..." data-required="true">
+      </div>
+      <div class="field" data-qid="35">
+        <label><span class="qnum">35.</span> 📖 what is the capital of England? (English question) <span class="req-star">*</span></label>
+        <input type="text" id="q35" placeholder="city name" data-required="true">
+      </div>
+      <div class="field" data-qid="36">
+        <label><span class="qnum">36.</span> 📖 spell "dog" <span class="req-star">*</span></label>
+        <input type="text" id="q36" placeholder="d-o-g" data-required="true">
+      </div>
+      <div class="field" data-qid="37">
+        <label><span class="qnum">37.</span> 📖 what is a synonym for "big"? <span class="req-star">*</span></label>
+        <input type="text" id="q37" placeholder="big synonym" data-required="true">
+      </div>
+      <div class="field" data-qid="38">
+        <label><span class="qnum">38.</span> 📖 how many letters in the alphabet? (roughly) <span class="req-star">*</span></label>
+        <input type="text" id="q38" placeholder="letters" data-required="true">
+      </div>
+      <div class="field" data-qid="39">
+        <label><span class="qnum">39.</span> 📖 is "the" a word? (yes, but confirm) <span class="req-star">*</span></label>
+        <select id="q39" data-required="true">
+          <option value="" disabled selected>— choose —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="maybe">maybe</option>
+        </select>
+      </div>
+      <div class="field" data-qid="40">
+        <label><span class="qnum">40.</span> 📖 what does "lol" stand for? (laugh out loud) <span class="req-star">*</span></label>
+        <input type="text" id="q40" placeholder="lol..." data-required="true">
       </div>
 
-      <!-- Joke question 2 -->
-      <div class="field">
-        <label>🌙 how many moons does your inner animal have? <span class="req-star">*</span></label>
-        <select id="moons" required>
+      <div class="section-divider">💻 PROGRAMMING (dumbed down) 💻</div>
+      <!-- PROGRAMMING 41-75 -->
+      <div class="field" data-qid="41">
+        <label><span class="qnum">41.</span> 💻 what does HTML stand for? (or just guess) <span class="req-star">*</span></label>
+        <input type="text" id="q41" placeholder="H-T-M-L..." data-required="true">
+      </div>
+      <div class="field" data-qid="42">
+        <label><span class="qnum">42.</span> 💻 is JavaScript the same as Java? (classic trap) <span class="req-star">*</span></label>
+        <select id="q42" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes (wrong)</option>
+          <option value="no">no (correct)</option>
+          <option value="kindof">kind of (chaos)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="43">
+        <label><span class="qnum">43.</span> 💻 what symbol is used for comments in Python? <span class="req-star">*</span></label>
+        <input type="text" id="q43" placeholder="comment symbol" data-required="true">
+      </div>
+      <div class="field" data-qid="44">
+        <label><span class="qnum">44.</span> 💻 what does "CSS" stand for? (Cascading Style Sheets) <span class="req-star">*</span></label>
+        <input type="text" id="q44" placeholder="C-S-S..." data-required="true">
+      </div>
+      <div class="field" data-qid="45">
+        <label><span class="qnum">45.</span> 💻 how many bits in a byte? (usually 8) <span class="req-star">*</span></label>
+        <input type="text" id="q45" placeholder="bits in a byte" data-required="true">
+      </div>
+      <div class="field" data-qid="46">
+        <label><span class="qnum">46.</span> 💻 what is a boolean? (true/false vibes) <span class="req-star">*</span></label>
+        <input type="text" id="q46" placeholder="boolean..." data-required="true">
+      </div>
+      <div class="field" data-qid="47">
+        <label><span class="qnum">47.</span> 💻 is Python a snake or a programming language? (both) <span class="req-star">*</span></label>
+        <select id="q47" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="snake">snake</option>
+          <option value="language">programming language</option>
+          <option value="both">both (correct)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="48">
+        <label><span class="qnum">48.</span> 💻 what does "bug" mean in programming? (not an insect) <span class="req-star">*</span></label>
+        <input type="text" id="q48" placeholder="bug..." data-required="true">
+      </div>
+      <div class="field" data-qid="49">
+        <label><span class="qnum">49.</span> 💻 what is the output of: print("hello")? <span class="req-star">*</span></label>
+        <input type="text" id="q49" placeholder="output..." data-required="true">
+      </div>
+      <div class="field" data-qid="50">
+        <label><span class="qnum">50.</span> 💻 how do you write "hello world" in JavaScript? (just describe it) <span class="req-star">*</span></label>
+        <input type="text" id="q50" placeholder="console.log('hello world')" data-required="true">
+      </div>
+      <div class="field" data-qid="51">
+        <label><span class="qnum">51.</span> 💻 what is a variable? (a box for stuff) <span class="req-star">*</span></label>
+        <input type="text" id="q51" placeholder="variable..." data-required="true">
+      </div>
+      <div class="field" data-qid="52">
+        <label><span class="qnum">52.</span> 💻 what does "git" do? (version control, not a insult) <span class="req-star">*</span></label>
+        <input type="text" id="q52" placeholder="git..." data-required="true">
+      </div>
+      <div class="field" data-qid="53">
+        <label><span class="qnum">53.</span> 💻 is HTML a programming language? (debate) <span class="req-star">*</span></label>
+        <select id="q53" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no (it's markup)</option>
+          <option value="maybe">maybe (fight me)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="54">
+        <label><span class="qnum">54.</span> 💻 what is an array? (a list of things) <span class="req-star">*</span></label>
+        <input type="text" id="q54" placeholder="array..." data-required="true">
+      </div>
+      <div class="field" data-qid="55">
+        <label><span class="qnum">55.</span> 💻 what does "404" mean? (not found) <span class="req-star">*</span></label>
+        <input type="text" id="q55" placeholder="404..." data-required="true">
+      </div>
+      <div class="field" data-qid="56">
+        <label><span class="qnum">56.</span> 💻 what is a loop? (it goes round and round) <span class="req-star">*</span></label>
+        <input type="text" id="q56" placeholder="loop..." data-required="true">
+      </div>
+      <div class="field" data-qid="57">
+        <label><span class="qnum">57.</span> 💻 what language is used for styling websites? (CSS) <span class="req-star">*</span></label>
+        <input type="text" id="q57" placeholder="styling language" data-required="true">
+      </div>
+      <div class="field" data-qid="58">
+        <label><span class="qnum">58.</span> 💻 what does "frontend" mean? (the part you see) <span class="req-star">*</span></label>
+        <input type="text" id="q58" placeholder="frontend..." data-required="true">
+      </div>
+      <div class="field" data-qid="59">
+        <label><span class="qnum">59.</span> 💻 what does "backend" mean? (the part you don't see) <span class="req-star">*</span></label>
+        <input type="text" id="q59" placeholder="backend..." data-required="true">
+      </div>
+      <div class="field" data-qid="60">
+        <label><span class="qnum">60.</span> 💻 what is a "function"? (a machine that does stuff) <span class="req-star">*</span></label>
+        <input type="text" id="q60" placeholder="function..." data-required="true">
+      </div>
+
+      <div class="section-divider">🧠 MORE DUMB QUESTIONS 🧠</div>
+      <!-- EXTRA 61-110 -->
+      <div class="field" data-qid="61">
+        <label><span class="qnum">61.</span> 🧠 🍕 favourite pizza topping (for token seasoning) <span class="req-star">*</span></label>
+        <input type="text" id="q61" placeholder="e.g. 'pineapple', 'regret'" data-required="true">
+      </div>
+      <div class="field" data-qid="62">
+        <label><span class="qnum">62.</span> 🧠 🌙 how many moons does your inner animal have? <span class="req-star">*</span></label>
+        <select id="q62" data-required="true">
           <option value="" disabled selected>— select cosmic number —</option>
           <option value="0">0 (denial)</option>
           <option value="1">1 (basic)</option>
@@ -288,42 +712,232 @@
           <option value="∞">∞ (over 9000)</option>
         </select>
       </div>
-
-      <!-- Joke question 3: secret phrase -->
-      <div class="field">
-        <label>🤫 secret animal password (whisper it) <span class="req-star">*</span></label>
-        <input type="text" id="secret" placeholder="e.g. 'squeak', 'rawr means love'" required>
+      <div class="field" data-qid="63">
+        <label><span class="qnum">63.</span> 🧠 🤫 secret animal password (whisper it) <span class="req-star">*</span></label>
+        <input type="text" id="q63" placeholder="e.g. 'squeak'" data-required="true">
       </div>
-
-      <!-- Checkbox row: multiple required -->
-      <div class="field">
-        <label>📜 mandatory agreements <span class="req-star">*</span></label>
-        <div class="checkbox-row">
-          <div class="checkbox-item">
-            <input type="checkbox" id="chk1" class="req-check" required>
-            <label for="chk1">I promise not to feed the token after midnight</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="chk2" class="req-check" required>
-            <label for="chk2">I believe in squirrel conspiracy</label>
-          </div>
-          <div class="checkbox-item">
-            <input type="checkbox" id="chk3" class="req-check" required>
-            <label for="chk3">My animal spirit is confused</label>
-          </div>
-        </div>
+      <div class="field" data-qid="64">
+        <label><span class="qnum">64.</span> 🧠 what is 6 + 7? (harder than it looks) <span class="req-star">*</span></label>
+        <input type="text" id="q64" placeholder="number" data-required="true">
       </div>
-
-      <!-- bonus textarea, not required but adds to troll -->
-      <div class="field">
-        <label>📝 describe your quest in 3 words (optional, but we judge you)</label>
-        <textarea id="questDesc" rows="1" placeholder="e.g. 'sniff the cheese'"></textarea>
+      <div class="field" data-qid="65">
+        <label><span class="qnum">65.</span> 🧠 how many days in a week? (quick!) <span class="req-star">*</span></label>
+        <input type="text" id="q65" placeholder="days" data-required="true">
+      </div>
+      <div class="field" data-qid="66">
+        <label><span class="qnum">66.</span> 🧠 spell "yes" backwards <span class="req-star">*</span></label>
+        <input type="text" id="q66" placeholder="backwards yes" data-required="true">
+      </div>
+      <div class="field" data-qid="67">
+        <label><span class="qnum">67.</span> 🧠 is the sky blue? (yes or no) <span class="req-star">*</span></label>
+        <select id="q67" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="sometimes">sometimes</option>
+        </select>
+      </div>
+      <div class="field" data-qid="68">
+        <label><span class="qnum">68.</span> 🧠 what is the first letter of your name? <span class="req-star">*</span></label>
+        <input type="text" id="q68" placeholder="one letter" data-required="true">
+      </div>
+      <div class="field" data-qid="69">
+        <label><span class="qnum">69.</span> 🧠 how many fingers on one hand? (usually) <span class="req-star">*</span></label>
+        <input type="text" id="q69" placeholder="fingers" data-required="true">
+      </div>
+      <div class="field" data-qid="70">
+        <label><span class="qnum">70.</span> 🧠 what is 9 + 1? (big brain) <span class="req-star">*</span></label>
+        <input type="text" id="q70" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="71">
+        <label><span class="qnum">71.</span> 🧠 does a cat say "meow" or "woof"? (choose wisely) <span class="req-star">*</span></label>
+        <select id="q71" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="meow">meow</option>
+          <option value="woof">woof</option>
+          <option value="both">both (catdog)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="72">
+        <label><span class="qnum">72.</span> 🧠 how many hours in a day? (roughly) <span class="req-star">*</span></label>
+        <input type="text" id="q72" placeholder="hours" data-required="true">
+      </div>
+      <div class="field" data-qid="73">
+        <label><span class="qnum">73.</span> 🧠 what color is an apple? (usually) <span class="req-star">*</span></label>
+        <input type="text" id="q73" placeholder="color" data-required="true">
+      </div>
+      <div class="field" data-qid="74">
+        <label><span class="qnum">74.</span> 🧠 is water wet? (philosophical) <span class="req-star">*</span></label>
+        <select id="q74" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="idk">idk (existential)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="75">
+        <label><span class="qnum">75.</span> 🧠 what comes after Wednesday? (no googling) <span class="req-star">*</span></label>
+        <input type="text" id="q75" placeholder="day" data-required="true">
+      </div>
+      <div class="field" data-qid="76">
+        <label><span class="qnum">76.</span> 🧠 how many letters in "dog"? (count carefully) <span class="req-star">*</span></label>
+        <input type="text" id="q76" placeholder="letters" data-required="true">
+      </div>
+      <div class="field" data-qid="77">
+        <label><span class="qnum">77.</span> 🧠 what is 2 × 5? (times tables) <span class="req-star">*</span></label>
+        <input type="text" id="q77" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="78">
+        <label><span class="qnum">78.</span> 🧠 is "hello" a greeting? (yes) <span class="req-star">*</span></label>
+        <select id="q78" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="maybe">maybe</option>
+        </select>
+      </div>
+      <div class="field" data-qid="79">
+        <label><span class="qnum">79.</span> 🧠 what is the opposite of "up"? (down) <span class="req-star">*</span></label>
+        <input type="text" id="q79" placeholder="opposite of up" data-required="true">
+      </div>
+      <div class="field" data-qid="80">
+        <label><span class="qnum">80.</span> 🧠 how many wheels on a car? (usually 4) <span class="req-star">*</span></label>
+        <input type="text" id="q80" placeholder="wheels" data-required="true">
+      </div>
+      <div class="field" data-qid="81">
+        <label><span class="qnum">81.</span> 🧠 what is 8 - 4? (brain teaser) <span class="req-star">*</span></label>
+        <input type="text" id="q81" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="82">
+        <label><span class="qnum">82.</span> 🧠 is the earth round? (yes, but confirm) <span class="req-star">*</span></label>
+        <select id="q82" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="flat">flat (please no)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="83">
+        <label><span class="qnum">83.</span> 🧠 what is the capital of France? (English-ish) <span class="req-star">*</span></label>
+        <input type="text" id="q83" placeholder="city" data-required="true">
+      </div>
+      <div class="field" data-qid="84">
+        <label><span class="qnum">84.</span> 🧠 how many zeros in 100? <span class="req-star">*</span></label>
+        <input type="text" id="q84" placeholder="zeros" data-required="true">
+      </div>
+      <div class="field" data-qid="85">
+        <label><span class="qnum">85.</span> 🧠 what does "www" stand for? (world wide web) <span class="req-star">*</span></label>
+        <input type="text" id="q85" placeholder="W-W-W..." data-required="true">
+      </div>
+      <div class="field" data-qid="86">
+        <label><span class="qnum">86.</span> 🧠 is a hotdog a sandwich? (debate) <span class="req-star">*</span></label>
+        <select id="q86" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="idk">idk (food fight)</option>
+        </select>
+      </div>
+      <div class="field" data-qid="87">
+        <label><span class="qnum">87.</span> 🧠 what is 12 ÷ 3? (division time) <span class="req-star">*</span></label>
+        <input type="text" id="q87" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="88">
+        <label><span class="qnum">88.</span> 🧠 spell "no" backwards <span class="req-star">*</span></label>
+        <input type="text" id="q88" placeholder="backwards no" data-required="true">
+      </div>
+      <div class="field" data-qid="89">
+        <label><span class="qnum">89.</span> 🧠 how many legs does a spider have? (8, creepy) <span class="req-star">*</span></label>
+        <input type="text" id="q89" placeholder="legs" data-required="true">
+      </div>
+      <div class="field" data-qid="90">
+        <label><span class="qnum">90.</span> 🧠 what is 1 + 2 + 3? (add them up) <span class="req-star">*</span></label>
+        <input type="text" id="q90" placeholder="sum" data-required="true">
+      </div>
+      <div class="field" data-qid="91">
+        <label><span class="qnum">91.</span> 🧠 is "blue" a color? (yes) <span class="req-star">*</span></label>
+        <select id="q91" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="maybe">maybe</option>
+        </select>
+      </div>
+      <div class="field" data-qid="92">
+        <label><span class="qnum">92.</span> 🧠 what is the last letter of the alphabet? (Z) <span class="req-star">*</span></label>
+        <input type="text" id="q92" placeholder="last letter" data-required="true">
+      </div>
+      <div class="field" data-qid="93">
+        <label><span class="qnum">93.</span> 🧠 how many minutes in an hour? (60) <span class="req-star">*</span></label>
+        <input type="text" id="q93" placeholder="minutes" data-required="true">
+      </div>
+      <div class="field" data-qid="94">
+        <label><span class="qnum">94.</span> 🧠 what is 4 + 4? (easy) <span class="req-star">*</span></label>
+        <input type="text" id="q94" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="95">
+        <label><span class="qnum">95.</span> 🧠 does a fish live in water? (yes) <span class="req-star">*</span></label>
+        <select id="q95" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="sometimes">sometimes</option>
+        </select>
+      </div>
+      <div class="field" data-qid="96">
+        <label><span class="qnum">96.</span> 🧠 what is the opposite of "cold"? (hot) <span class="req-star">*</span></label>
+        <input type="text" id="q96" placeholder="opposite of cold" data-required="true">
+      </div>
+      <div class="field" data-qid="97">
+        <label><span class="qnum">97.</span> 🧠 how many wheels on a tricycle? (3) <span class="req-star">*</span></label>
+        <input type="text" id="q97" placeholder="wheels" data-required="true">
+      </div>
+      <div class="field" data-qid="98">
+        <label><span class="qnum">98.</span> 🧠 what is 5 + 5? (big math) <span class="req-star">*</span></label>
+        <input type="text" id="q98" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="99">
+        <label><span class="qnum">99.</span> 🧠 is "cat" an animal? (yes) <span class="req-star">*</span></label>
+        <select id="q99" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="maybe">maybe</option>
+        </select>
+      </div>
+      <div class="field" data-qid="100">
+        <label><span class="qnum">100.</span> 🧠 what is the first day of the week? (Monday or Sunday) <span class="req-star">*</span></label>
+        <input type="text" id="q100" placeholder="day" data-required="true">
+      </div>
+      <div class="field" data-qid="101">
+        <label><span class="qnum">101.</span> 🧠 last one: type "I survived the troll" <span class="req-star">*</span></label>
+        <input type="text" id="q101" placeholder="I survived the troll" data-required="true">
+      </div>
+      <div class="field" data-qid="102">
+        <label><span class="qnum">102.</span> 🧠 bonus required: what is 0 + 0? (deep) <span class="req-star">*</span></label>
+        <input type="text" id="q102" placeholder="number" data-required="true">
+      </div>
+      <div class="field" data-qid="103">
+        <label><span class="qnum">103.</span> 🧠 how many letters in "z"? (just one) <span class="req-star">*</span></label>
+        <input type="text" id="q103" placeholder="count" data-required="true">
+      </div>
+      <div class="field" data-qid="104">
+        <label><span class="qnum">104.</span> 🧠 is 2 greater than 1? (yes) <span class="req-star">*</span></label>
+        <select id="q104" data-required="true">
+          <option value="" disabled selected>— pick —</option>
+          <option value="yes">yes</option>
+          <option value="no">no</option>
+          <option value="maybe">maybe</option>
+        </select>
+      </div>
+      <div class="field" data-qid="105">
+        <label><span class="qnum">105.</span> 🧠 what is 1000 - 1? (999) <span class="req-star">*</span></label>
+        <input type="text" id="q105" placeholder="number" data-required="true">
       </div>
 
       <button type="submit" class="btn-generate" id="generateBtn">🔮 GENERATE TOKEN 🔮</button>
     </form>
 
-    <!-- output zone -->
     <div class="token-output" id="tokenOutput">
       <div class="token-label">YOUR RANDOM-ASS 64 CHAR TOKEN</div>
       <div class="token-value" id="tokenValue"></div>
@@ -331,22 +945,25 @@
     <div class="small-note">* the token is 100% real, definitely not random letters</div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
     (function() {
       const form = document.getElementById('trollForm');
       const generateBtn = document.getElementById('generateBtn');
       const tokenValue = document.getElementById('tokenValue');
+      const toast = document.getElementById('toast');
 
-      // required fields list (inputs, select, and checkboxes)
-      const ign = document.getElementById('ign');
-      const pizza = document.getElementById('pizza');
-      const moons = document.getElementById('moons');
-      const secret = document.getElementById('secret');
-      const chk1 = document.getElementById('chk1');
-      const chk2 = document.getElementById('chk2');
-      const chk3 = document.getElementById('chk3');
+      // Gather all required fields dynamically
+      const requiredFields = [];
+      document.querySelectorAll('[data-required="true"]').forEach(el => {
+        requiredFields.push(el);
+      });
 
-      // Helper: generate random 64-char string (letters + numbers, mixed case, some symbols for fun)
+      const totalRequired = requiredFields.length;
+      document.getElementById('totalCount').textContent = totalRequired;
+
+      // Helper: generate random 64-char string
       function generateRandom64() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&?';
         let result = '';
@@ -356,41 +973,70 @@
         return result;
       }
 
-      // Validate all required fields manually (to show a funny alert)
-      function validateRequired() {
-        if (!ign.value.trim()) {
-          alert('❌ You forgot your Animal Company IGN! The token refuses.');
-          ign.focus();
-          return false;
+      // Check if a field is filled
+      function isFilled(el) {
+        if (el.tagName === 'SELECT') {
+          return el.value !== '' && el.value !== null;
         }
-        if (!pizza.value.trim()) {
-          alert('❌ Pizza topping is required. The token demands seasoning.');
-          pizza.focus();
-          return false;
-        }
-        if (!moons.value) {
-          alert('❌ How many moons? The token needs cosmic alignment.');
-          moons.focus();
-          return false;
-        }
-        if (!secret.value.trim()) {
-          alert('❌ Whisper the secret animal password! (any nonsense works)');
-          secret.focus();
-          return false;
-        }
-        if (!chk1.checked) {
-          alert('❌ You must promise not to feed the token after midnight!');
-          chk1.focus();
-          return false;
-        }
-        if (!chk2.checked) {
-          alert('❌ Squirrel conspiracy belief is non-negotiable.');
-          chk2.focus();
-          return false;
-        }
-        if (!chk3.checked) {
-          alert('❌ You must admit your animal spirit is confused. Mandatory.');
-          chk3.focus();
+        return el.value.trim() !== '';
+      }
+
+      // Update progress bar and field styling
+      function updateProgress() {
+        let answered = 0;
+        requiredFields.forEach(el => {
+          const fieldDiv = el.closest('.field');
+          if (isFilled(el)) {
+            answered++;
+            if (fieldDiv) {
+              fieldDiv.classList.add('done');
+              fieldDiv.classList.remove('missing');
+            }
+            el.classList.remove('invalid');
+          } else {
+            if (fieldDiv) {
+              fieldDiv.classList.remove('done');
+            }
+          }
+        });
+
+        const percent = Math.round((answered / totalRequired) * 100);
+        document.getElementById('answeredCount').textContent = answered;
+        document.getElementById('progressBar').style.width = percent + '%';
+        document.getElementById('progressPercent').textContent = percent + '%';
+      }
+
+      // Show toast
+      let toastTimer;
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2600);
+      }
+
+      // Validate all required fields
+      function validateAll() {
+        const missing = [];
+        requiredFields.forEach(el => {
+          if (!isFilled(el)) {
+            missing.push(el);
+            el.classList.add('invalid');
+            const fieldDiv = el.closest('.field');
+            if (fieldDiv) fieldDiv.classList.add('missing');
+          } else {
+            el.classList.remove('invalid');
+          }
+        });
+
+        if (missing.length > 0) {
+          const first = missing[0];
+          const labelText = first.closest('.field')?.querySelector('label')?.textContent?.trim().slice(0, 60) || 'a required field';
+          showToast(`❌ ${missing.length} question(s) still empty! (e.g. "${labelText}...")`);
+          first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          first.focus();
           return false;
         }
         return true;
@@ -400,42 +1046,39 @@
       function generateTokenAndDisplay() {
         const token = generateRandom64();
         tokenValue.textContent = token;
-
-        // extra troll: make output glitch briefly
         tokenValue.classList.add('glitch');
-        setTimeout(() => {
-          tokenValue.classList.remove('glitch');
-        }, 250);
-
-        // also scroll to output smoothly
+        setTimeout(() => tokenValue.classList.remove('glitch'), 250);
         document.getElementById('tokenOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        showToast('✅ Token generated! (100% real, trust)');
       }
 
-      // main handler
+      // Main handler
       generateBtn.addEventListener('click', function(e) {
         e.preventDefault();
-
-        if (!validateRequired()) {
-          return; // stop if not valid
-        }
-
-        // All good -> generate a random 64-char string
+        if (!validateAll()) return;
         generateTokenAndDisplay();
       });
 
-      // Also prevent form submit from reloading (already onsubmit return false)
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        generateBtn.click(); // trigger the click handler
+        generateBtn.click();
       });
 
-      // Additional troll: when user tries to submit via enter key
       form.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
           e.preventDefault();
           generateBtn.click();
         }
       });
+
+      // Live progress updates
+      requiredFields.forEach(el => {
+        el.addEventListener('input', updateProgress);
+        el.addEventListener('change', updateProgress);
+      });
+
+      // Initial update
+      updateProgress();
     })();
   </script>
 </body>
