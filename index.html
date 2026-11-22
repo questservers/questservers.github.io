@@ -248,7 +248,7 @@
         0 30px 80px -20px rgba(0,0,0,0.9),
         0 0 60px -15px var(--accent-glow);
       padding: 20px;
-      max-width: 640px;
+      max-width: 540px;
       width: 100%;
       position: relative;
       overflow: hidden;
@@ -301,7 +301,7 @@
     .stat-value.checkpoint-hit { color: var(--success); }
     @keyframes timerPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    /* 3D CANVAS */
+    /* 2D CANVAS */
     .canvas-wrap {
       position: relative;
       border-radius: 12px;
@@ -310,10 +310,10 @@
       background: #060910;
       margin-bottom: 12px;
     }
-    #parkourCanvas {
+    #trollCanvas {
       display: block;
       width: 100%;
-      height: 340px;
+      height: 280px;
     }
     .canvas-overlay-msg {
       position: absolute;
@@ -327,7 +327,7 @@
       color: var(--text-secondary);
       text-align: center;
       padding: 20px;
-      background: rgba(6, 9, 16, 0.6);
+      background: rgba(6, 9, 16, 0.7);
       transition: opacity 0.3s;
       opacity: 0;
     }
@@ -384,7 +384,7 @@
       .card-body { padding: 20px 18px 22px; }
       .card-header { padding: 22px 18px 0; }
       h1 { font-size: 19px; }
-      #parkourCanvas { height: 280px; }
+      #trollCanvas { height: 240px; }
       .stat-value { font-size: 15px; }
     }
   </style>
@@ -434,38 +434,36 @@
     <div class="game-window">
       <div class="game-header">
         <div class="game-title">Identity Verification</div>
-        <div class="game-badge">3D Parkour</div>
+        <div class="game-badge">Troll Runner</div>
       </div>
-      <div class="game-sub">Reach the golden checkpoint to verify your identity. Use <strong>A / D</strong> to strafe and <strong>SPACE</strong> to jump. Don't fall.</div>
+      <div class="game-sub">Survive for 15 seconds to verify. Use <strong>SPACE</strong> to jump over the red hazards.</div>
 
       <div class="game-stats">
         <div class="stat-box">
-          <span class="stat-label">Checkpoints</span>
-          <span class="stat-value" id="checkpointCount">0 / 3</span>
+          <span class="stat-label">Status</span>
+          <span class="stat-value" id="statusText">Alive</span>
         </div>
         <div class="stat-box">
           <span class="stat-label">Distance</span>
           <span class="stat-value" id="distanceText">0m</span>
         </div>
         <div class="stat-box">
-          <span class="stat-label">Time</span>
-          <span class="stat-value" id="timerText">45.0s</span>
+          <span class="stat-label">Time Left</span>
+          <span class="stat-value" id="timerText">15.0s</span>
         </div>
       </div>
 
       <div class="canvas-wrap">
-        <canvas id="parkourCanvas"></canvas>
+        <canvas id="trollCanvas"></canvas>
         <div class="canvas-overlay-msg" id="canvasMsg"></div>
       </div>
 
       <div class="controls-hint">
-        <span><span class="key">A</span> / <span class="key">D</span> strafe</span>
-        <span><span class="key">SPACE</span> jump</span>
-        <span><span class="key">R</span> restart</span>
+        <span><span class="key">SPACE</span> to jump</span>
       </div>
 
       <div class="game-footer">
-        <div class="game-msg info" id="gameMsg">Reach 3 checkpoints to pass verification.</div>
+        <div class="game-msg info" id="gameMsg">Jump over the red obstacles. Good luck.</div>
         <button class="btn-close" id="closeGame">Cancel</button>
       </div>
     </div>
@@ -491,98 +489,45 @@
         return result;
       }
 
-      // ---------- 3D PARKOUR MINIGAME ----------
+      // ---------- TROLL 2D MINIGAME ----------
       const overlay = document.getElementById('gameOverlay');
-      const canvas = document.getElementById('parkourCanvas');
+      const canvas = document.getElementById('trollCanvas');
       const ctx = canvas.getContext('2d');
       const canvasMsg = document.getElementById('canvasMsg');
-      const checkpointCountEl = document.getElementById('checkpointCount');
+      const statusText = document.getElementById('statusText');
       const distanceText = document.getElementById('distanceText');
       const timerText = document.getElementById('timerText');
       const gameMsg = document.getElementById('gameMsg');
       const closeGameBtn = document.getElementById('closeGame');
 
-      const CHECKPOINTS_REQUIRED = 3;
-      const TIME_LIMIT = 45;
-      const PLAYER_SPEED = 3.2;
-      const GRAVITY = 0.55;
-      const JUMP_VELOCITY = 9.5;
-      const FOV = 500;
-      const CAMERA_HEIGHT = 90;
-      const CAMERA_DISTANCE = 300;
-
       let gameActive = false;
-      let player = { x: 0, y: 0, z: 0, vy: 0, onGround: true };
-      let keys = { a: false, d: false, space: false };
-      let checkpointsHit = 0;
-      let timeLeft = TIME_LIMIT;
+      let gameLoop = null;
       let timerId = null;
-      let rafId = null;
-      let platforms = [];
-      let checkpoints = [];
-      let cameraX = 0;
-      let lastTime = 0;
-      let bgStars = [];
+      
+      let timeLeft = 15;
+      let distance = 0;
+      
+      // Player
+      const player = {
+        x: 60,
+        y: 0,
+        width: 30,
+        height: 30,
+        vy: 0,
+        jumpForce: -8,
+        gravity: 0.6,
+        grounded: true
+      };
+      
+      // Obstacles
+      let obstacles = [];
+      let spawnTimer = 0;
+      let spawnRate = 40; // frames
+      let speed = 6;
+      
       let canvasWidth = 0;
       let canvasHeight = 0;
-
-      // Generate an impossible-but-fair-looking course
-      function buildCourse() {
-        platforms = [];
-        checkpoints = [];
-        // starting platform
-        platforms.push({ x: -40, z: 0, w: 120, d: 200, y: 0 });
-        // A long chain of tiny, narrow, moving platforms with impossible gaps
-        let z = 220;
-        let x = 0;
-        for (let i = 0; i < 40; i++) {
-          const w = 34 + Math.random() * 14; // narrow width
-          const d = 34 + Math.random() * 14; // narrow depth
-          // huge horizontal offsets — impossible to land consistently
-          x += (Math.random() - 0.5) * 300;
-          if (x > 220) x = 220;
-          if (x < -220) x = -220;
-          platforms.push({ x, z, w, d, y: 0 });
-          z += d + 90 + Math.random() * 60; // huge gap
-        }
-        
-        // checkpoints placed at impossible spots
-        const cp1 = platforms[8];
-        checkpoints.push({ x: cp1.x + cp1.w / 2, z: cp1.z + cp1.d / 2, y: 40, hit: false, index: 0 });
-
-        const cp2 = platforms[20];
-        checkpoints.push({ x: cp2.x + cp2.w / 2, z: cp2.z + cp2.d / 2, y: 40, hit: false, index: 1 });
-
-        const cp3 = platforms[32];
-        checkpoints.push({ x: cp3.x + cp3.w / 2, z: cp3.z + cp3.d / 2, y: 40, hit: false, index: 2 });
-
-        // stars for background
-        bgStars = [];
-        for (let i = 0; i < 80; i++) {
-          bgStars.push({ x: Math.random(), y: Math.random(), s: Math.random() * 1.5 + 0.5 });
-        }
-      }
-
-      function resetPlayer() {
-        player = { x: 0, y: 0, z: 0, vy: 0, onGround: true };
-        cameraX = 0;
-      }
-
-      function resetGame() {
-        checkpointsHit = 0;
-        timeLeft = TIME_LIMIT;
-        checkpointCountEl.textContent = '0 / ' + CHECKPOINTS_REQUIRED;
-        checkpointCountEl.classList.remove('checkpoint-hit');
-        distanceText.textContent = '0m';
-        timerText.textContent = TIME_LIMIT.toFixed(1) + 's';
-        timerText.classList.remove('timer-low');
-        gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
-        gameMsg.className = 'game-msg info';
-        canvasMsg.classList.remove('show', 'win', 'fail');
-        canvasMsg.textContent = '';
-        buildCourse();
-        resetPlayer();
-      }
+      let frameCount = 0;
 
       function resizeCanvas() {
         const rect = canvas.parentElement.getBoundingClientRect();
@@ -591,291 +536,80 @@
         canvas.width = canvasWidth * window.devicePixelRatio;
         canvas.height = canvasHeight * window.devicePixelRatio;
         ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+        
+        // Ground level
+        player.y = canvasHeight - 40;
       }
 
-      function project(x, y, z) {
-        const relZ = z - player.z + CAMERA_DISTANCE;
-        if (relZ <= 1) return null;
-        const scale = FOV / relZ;
-        const screenX = (x - cameraX) * scale + canvasWidth / 2;
-        const screenY = (CAMERA_HEIGHT - y) * scale + canvasHeight / 2;
-        return { x: screenX, y: screenY, scale };
-      }
-
-      function draw() {
-        const w = canvasWidth;
-        const h = canvasHeight;
-
-        // background gradient
-        const grad = ctx.createLinearGradient(0, 0, 0, h);
-        grad.addColorStop(0, '#050810');
-        grad.addColorStop(0.5, '#0a1020');
-        grad.addColorStop(1, '#060910');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-
-        // stars
-        ctx.fillStyle = 'rgba(150, 180, 255, 0.4)';
-        bgStars.forEach(s => {
-          const sx = (s.x * w + (player.z * 0.02)) % w;
-          const sy = s.y * h * 0.6;
-          ctx.beginPath();
-          ctx.arc(sx, sy, s.s, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        // horizon glow
-        const hg = ctx.createRadialGradient(w/2, h*0.45, 0, w/2, h*0.45, w*0.7);
-        hg.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
-        hg.addColorStop(1, 'transparent');
-        ctx.fillStyle = hg;
-        ctx.fillRect(0, 0, w, h);
-
-        // Draw platforms from far to near
-        const sorted = platforms.slice().sort((a, b) => b.z - a.z);
-        sorted.forEach(p => {
-          const relZ = p.z - player.z + CAMERA_DISTANCE;
-          if (relZ <= 10 || relZ > 2000) return;
-          if (p.z + p.d < player.z - 100) return;
-
-          const corners = [
-            project(p.x, 0, p.z),
-            project(p.x + p.w, 0, p.z),
-            project(p.x + p.w, 0, p.z + p.d),
-            project(p.x, 0, p.z + p.d)
-          ];
-          if (corners.some(c => !c)) return;
-
-          // top face
-          ctx.beginPath();
-          ctx.moveTo(corners[0].x, corners[0].y);
-          ctx.lineTo(corners[1].x, corners[1].y);
-          ctx.lineTo(corners[2].x, corners[2].y);
-          ctx.lineTo(corners[3].x, corners[3].y);
-          ctx.closePath();
-          const depth = Math.min(1, 400 / relZ);
-          ctx.fillStyle = `rgba(30, 45, 75, ${0.4 + depth * 0.6})`;
-          ctx.fill();
-          ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 + depth * 0.5})`;
-          ctx.lineWidth = 1;
-          ctx.stroke();
-
-          // front face (3D depth)
-          const bottomLeft = project(p.x, -30, p.z + p.d);
-          const bottomRight = project(p.x + p.w, -30, p.z + p.d);
-          if (bottomLeft && bottomRight) {
-            ctx.beginPath();
-            ctx.moveTo(corners[3].x, corners[3].y);
-            ctx.lineTo(corners[2].x, corners[2].y);
-            ctx.lineTo(bottomRight.x, bottomRight.y);
-            ctx.lineTo(bottomLeft.x, bottomLeft.y);
-            ctx.closePath();
-            ctx.fillStyle = `rgba(15, 22, 40, ${0.4 + depth * 0.6})`;
-            ctx.fill();
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 + depth * 0.3})`;
-            ctx.stroke();
-          }
-        });
-
-        // Draw checkpoints
-        checkpoints.forEach((cp, i) => {
-          if (cp.hit) return;
-          const relZ = cp.z - player.z + CAMERA_DISTANCE;
-          if (relZ <= 10 || relZ > 2000) return;
-          const proj = project(cp.x, cp.y, cp.z);
-          if (!proj) return;
-          const size = Math.max(4, 30 * proj.scale / 2);
-          const pulse = Math.sin(lastTime * 0.005) * 0.2 + 1;
-
-          // glow
-          const cg = ctx.createRadialGradient(proj.x, proj.y, 0, proj.x, proj.y, size * 3);
-          cg.addColorStop(0, 'rgba(240, 180, 41, 0.5)');
-          cg.addColorStop(1, 'transparent');
-          ctx.fillStyle = cg;
-          ctx.beginPath();
-          ctx.arc(proj.x, proj.y, size * 3, 0, Math.PI * 2);
-          ctx.fill();
-
-          // orb
-          ctx.fillStyle = 'rgba(240, 180, 41, 0.95)';
-          ctx.beginPath();
-          ctx.arc(proj.x, proj.y, size * pulse, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(255, 230, 150, 1)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          // number
-          ctx.fillStyle = '#1a1000';
-          ctx.font = `bold ${size * 1.1}px monospace`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText((i + 1), proj.x, proj.y + 1);
-        });
-
-        // Player (a glowing cube)
-        const playerProj = project(player.x + 20, player.y, player.z);
-        if (playerProj) {
-          const ps = Math.max(6, 18 * playerProj.scale / 2);
-          // shadow
-          ctx.fillStyle = 'rgba(0,0,0,0.4)';
-          ctx.beginPath();
-          ctx.ellipse(playerProj.x, playerProj.y + ps * 1.5, ps * 0.8, ps * 0.3, 0, 0, Math.PI * 2);
-          ctx.fill();
-          // body
-          const pg = ctx.createRadialGradient(playerProj.x - ps*0.3, playerProj.y - ps*0.3, 0, playerProj.x, playerProj.y, ps);
-          pg.addColorStop(0, '#93c5fd');
-          pg.addColorStop(0.6, '#3b82f6');
-          pg.addColorStop(1, '#1d4ed8');
-          ctx.fillStyle = pg;
-          ctx.beginPath();
-          ctx.arc(playerProj.x, playerProj.y, ps, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(191, 219, 254, 0.9)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          // glow
-          const glow = ctx.createRadialGradient(playerProj.x, playerProj.y, ps, playerProj.x, playerProj.y, ps * 2.5);
-          glow.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
-          glow.addColorStop(1, 'transparent');
-          ctx.fillStyle = glow;
-          ctx.beginPath();
-          ctx.arc(playerProj.x, playerProj.y, ps * 2.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // scanlines / vignette
-        ctx.fillStyle = 'rgba(0,0,0,0.1)';
-        for (let y = 0; y < h; y += 3) {
-          ctx.fillRect(0, y, w, 1);
-        }
-
-        const vg = ctx.createRadialGradient(w/2, h/2, h*0.3, w/2, h/2, h*0.9);
-        vg.addColorStop(0, 'transparent');
-        vg.addColorStop(1, 'rgba(0,0,0,0.5)');
-        ctx.fillStyle = vg;
-        ctx.fillRect(0, 0, w, h);
-      }
-
-      function update(dt) {
-        if (!gameActive) return;
-
-        // horizontal movement
-        let moveX = 0;
-        if (keys.a) moveX -= PLAYER_SPEED * dt;
-        if (keys.d) moveX += PLAYER_SPEED * dt;
-        player.x += moveX;
-        cameraX += (player.x - cameraX) * 0.15;
-
-        // constrain to a reasonable range
-        if (player.x > 400) player.x = 400;
-        if (player.x < -400) player.x = -400;
-
-        // jump physics
-        if (keys.space && player.onGround) {
-          player.vy = JUMP_VELOCITY;
-          player.onGround = false;
-          keys.space = false; // consume
-        }
-
-        player.vy -= GRAVITY;
-        player.y += player.vy;
-
-        // check landing on platforms
-        if (player.y <= 0) {
-          let landed = false;
-          let bestPlatform = null;
-          for (const p of platforms) {
-            // check if player is horizontally within platform (with some tolerance)
-            if (player.x + 20 > p.x && player.x + 20 < p.x + p.w &&
-                player.z > p.z && player.z < p.z + p.d) {
-              if (!bestPlatform || p.z > bestPlatform.z) bestPlatform = p;
-            }
-          }
-          if (bestPlatform) {
-            player.y = 0;
-            player.vy = 0;
-            player.onGround = true;
-            landed = true;
-          } else {
-            // fell off — reset to start
-            if (player.y < -100) {
-              failReset('You fell! The course resets.');
-            }
-          }
-          if (player.y < -200) failReset('You fell into the void!');
-        }
-
-        // auto-advance forward slowly (this is the "moving forward" part)
-        player.z += 1.8 * dt;
-
-        // check checkpoint collisions
-        checkpoints.forEach((cp, i) => {
-          if (cp.hit) return;
-          const dx = (player.x + 20) - cp.x;
-          const dz = player.z - cp.z;
-          const dist = Math.sqrt(dx * dx + dz * dz);
-          if (dist < 35 && Math.abs(player.y - (cp.y - 40)) < 70) {
-            cp.hit = true;
-            checkpointsHit++;
-            checkpointCountEl.textContent = checkpointsHit + ' / ' + CHECKPOINTS_REQUIRED;
-            checkpointCountEl.classList.add('checkpoint-hit');
-            setTimeout(() => checkpointCountEl.classList.remove('checkpoint-hit'), 600);
-            gameMsg.textContent = 'Checkpoint ' + checkpointsHit + ' reached! Keep going!';
-            gameMsg.className = 'game-msg win';
-            setTimeout(() => {
-              if (gameActive && checkpointsHit < CHECKPOINTS_REQUIRED) {
-                gameMsg.textContent = 'Reach ' + (CHECKPOINTS_REQUIRED - checkpointsHit) + ' more checkpoint(s).';
-                gameMsg.className = 'game-msg info';
-              }
-            }, 1200);
-
-            if (checkpointsHit >= CHECKPOINTS_REQUIRED) {
-              winGame();
-            }
-          }
-        });
-
-        // distance display
-        distanceText.textContent = Math.floor(player.z) + 'm';
-
-        // timer
-        timeLeft -= dt * 0.1;
-        if (timeLeft < 0) timeLeft = 0;
+      function resetGame() {
+        timeLeft = 15;
+        distance = 0;
+        obstacles = [];
+        spawnTimer = 0;
+        speed = 6;
+        player.y = canvasHeight - 40;
+        player.vy = 0;
+        player.grounded = true;
+        
+        statusText.textContent = 'Alive';
+        statusText.className = 'stat-value';
+        distanceText.textContent = '0m';
         timerText.textContent = timeLeft.toFixed(1) + 's';
-        if (timeLeft <= 10) timerText.classList.add('timer-low');
-        else timerText.classList.remove('timer-low');
+        timerText.classList.remove('timer-low');
+        
+        gameMsg.textContent = 'Jump over the red obstacles. Good luck.';
+        gameMsg.className = 'game-msg info';
+        canvasMsg.classList.remove('show', 'win', 'fail');
+      }
 
-        if (timeLeft <= 0) {
-          failReset('Time expired! Verification failed.');
+      function jump() {
+        if (gameActive && player.grounded) {
+          player.vy = player.jumpForce;
+          player.grounded = false;
         }
       }
 
-      function failReset(msg) {
+      function failGame(reason) {
         if (!gameActive) return;
         gameActive = false;
-        gameMsg.textContent = msg + ' Retrying...';
+        clearInterval(timerId);
+        statusText.textContent = 'Dead';
+        statusText.className = 'stat-value timer-low';
+        gameMsg.textContent = reason + ' Retrying...';
         gameMsg.className = 'game-msg fail';
-        canvasMsg.textContent = msg;
+        canvasMsg.textContent = 'WASTED';
         canvasMsg.className = 'canvas-overlay-msg show fail';
 
         setTimeout(() => {
-          // reset everything — but keep the verification running
           resetGame();
           gameActive = true;
-          gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
-          gameMsg.className = 'game-msg info';
           canvasMsg.classList.remove('show', 'fail', 'win');
-          lastTime = performance.now();
+          // start timer
+          timerId = setInterval(() => {
+            if (!gameActive) return;
+            timeLeft -= 0.1;
+            if (timeLeft < 0) timeLeft = 0;
+            timerText.textContent = timeLeft.toFixed(1) + 's';
+            if (timeLeft <= 5) timerText.classList.add('timer-low');
+            if (timeLeft <= 0) {
+              winGame();
+            }
+          }, 100);
         }, 1500);
       }
 
       function winGame() {
+        // The troll: even if you survive, a random invisible hitbox kills you at the last second.
+        if (Math.random() < 0.9) {
+          failGame('Verification error: Token expired. (Try again)');
+          return;
+        }
+
         gameActive = false;
         clearInterval(timerId);
-        cancelAnimationFrame(rafId);
-        gameMsg.textContent = '✓ Identity verified! You are a parkour legend.';
+        statusText.textContent = 'Verified';
+        statusText.className = 'stat-value checkpoint-hit';
+        gameMsg.textContent = '✓ Identity verified! You are a runner legend.';
         gameMsg.className = 'game-msg win';
         canvasMsg.textContent = '✓ VERIFIED';
         canvasMsg.className = 'canvas-overlay-msg show win';
@@ -894,86 +628,179 @@
         }, 1400);
       }
 
-      function loop(now) {
-        const dt = Math.min(0.05, (now - lastTime) / 16.67);
-        lastTime = now;
-        if (gameActive) update(dt);
-        draw();
-        rafId = requestAnimationFrame(loop);
-      }
-
-      // input handling
-      function onKeyDown(e) {
+      function update() {
         if (!gameActive) return;
-        if (e.key === 'a' || e.key === 'A') { keys.a = true; e.preventDefault(); }
-        if (e.key === 'd' || e.key === 'D') { keys.d = true; e.preventDefault(); }
-        if (e.key === ' ' || e.key === 'Space') { keys.space = true; e.preventDefault(); }
-        if (e.key === 'r' || e.key === 'R') {
-          // restart — but the timer doesn't reset, and neither does the course. troll.
-          gameMsg.textContent = 'Restart? The course doesn\'t reset. Good luck.';
-          gameMsg.className = 'game-msg fail';
-          setTimeout(() => {
-            if (gameActive) {
-              gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
-              gameMsg.className = 'game-msg info';
-            }
-          }, 1500);
-          e.preventDefault();
+        frameCount++;
+
+        // Update distance
+        distance += speed;
+        distanceText.textContent = Math.floor(distance) + 'm';
+
+        // Player physics
+        player.vy += player.gravity;
+        player.y += player.vy;
+
+        if (player.y >= canvasHeight - 40) {
+          player.y = canvasHeight - 40;
+          player.vy = 0;
+          player.grounded = true;
+        }
+
+        // Spawn obstacles
+        spawnTimer--;
+        if (spawnTimer <= 0) {
+          // Troll: sometimes spawn two at once, sometimes spawn them right on top of each other
+          const count = Math.random() < 0.3 ? 2 : 1;
+          for(let i = 0; i < count; i++) {
+            obstacles.push({
+              x: canvasWidth + (i * 40),
+              y: canvasHeight - 40,
+              width: 25,
+              height: 30 + Math.random() * 40 // height varies, some are impossibly tall
+            });
+          }
+          spawnTimer = spawnRate + Math.random() * 30; // erratic spawn rate
+        }
+
+        // Update obstacles
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          const obs = obstacles[i];
+          obs.x -= speed;
+
+          // Troll: Hitbox is unfairly larger than the visual obstacle
+          const hitboxPadding = 15; 
+          const playerHitX = player.x + hitboxPadding;
+          const playerHitY = player.y + hitboxPadding;
+          const playerHitW = player.width - hitboxPadding * 2;
+          const playerHitH = player.height - hitboxPadding * 2;
+
+          const obsHitX = obs.x + hitboxPadding;
+          const obsHitY = obs.y - obs.height + hitboxPadding;
+          const obsHitW = obs.width - hitboxPadding * 2;
+          const obsHitH = obs.height - hitboxPadding * 2;
+
+          // AABB collision with troll padding
+          if (playerHitX < obsHitX + obsHitW &&
+              playerHitX + playerHitW > obsHitX &&
+              playerHitY < obsHitY + obsHitH &&
+              playerHitY + playerHitH > obsHitY) {
+            failGame('You hit an obstacle.');
+            return;
+          }
+
+          // Remove offscreen
+          if (obs.x < -100) {
+            obstacles.splice(i, 1);
+          }
         }
       }
-      function onKeyUp(e) {
-        if (e.key === 'a' || e.key === 'A') keys.a = false;
-        if (e.key === 'd' || e.key === 'D') keys.d = false;
-        if (e.key === ' ' || e.key === 'Space') keys.space = false;
+
+      function draw() {
+        const w = canvasWidth;
+        const h = canvasHeight;
+
+        // Background
+        ctx.fillStyle = '#060910';
+        ctx.fillRect(0, 0, w, h);
+
+        // Moving grid (parallax)
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.1)';
+        ctx.lineWidth = 1;
+        const offset = (distance * 2) % 40;
+        for (let x = -offset; x < w; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, h);
+          ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+
+        // Ground line
+        ctx.strokeStyle = '#1e2633';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(0, h - 10);
+        ctx.lineTo(w, h - 10);
+        ctx.stroke();
+
+        // Draw obstacles
+        obstacles.forEach(obs => {
+          ctx.fillStyle = '#ef4444'; // red
+          ctx.shadowColor = '#ef4444';
+          ctx.shadowBlur = 10;
+          ctx.fillRect(obs.x, obs.y - obs.height, obs.width, obs.height);
+          ctx.shadowBlur = 0;
+        });
+
+        // Draw player
+        ctx.fillStyle = '#3b82f6'; // blue
+        ctx.shadowColor = '#60a5fa';
+        ctx.shadowBlur = 15;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+        ctx.shadowBlur = 0;
+
+        // Draw player "eyes" (troll face)
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(player.x + 6, player.y + 6, 6, 6);
+        ctx.fillRect(player.x + 18, player.y + 6, 6, 6);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(player.x + 8, player.y + 8, 3, 3);
+        ctx.fillRect(player.x + 20, player.y + 8, 3, 3);
       }
 
-      // touch controls (mobile)
-      function addTouchControls() {
-        let touchStartX = null;
-        canvas.addEventListener('touchstart', (e) => {
-          if (!gameActive) return;
-          touchStartX = e.touches[0].clientX;
-          keys.space = true;
-          setTimeout(() => { keys.space = false; }, 100);
-          e.preventDefault();
-        }, { passive: false });
-        canvas.addEventListener('touchmove', (e) => {
-          if (!gameActive || touchStartX === null) return;
-          const dx = e.touches[0].clientX - touchStartX;
-          if (dx > 20) { keys.d = true; keys.a = false; }
-          else if (dx < -20) { keys.a = true; keys.d = false; }
-          else { keys.a = false; keys.d = false; }
-          e.preventDefault();
-        }, { passive: false });
-        canvas.addEventListener('touchend', (e) => {
-          keys.a = false;
-          keys.d = false;
-          touchStartX = null;
-          e.preventDefault();
-        }, { passive: false });
+      function loop() {
+        update();
+        draw();
+        if (overlay.classList.contains('show')) {
+          requestAnimationFrame(loop);
+        }
       }
 
       function startGame() {
         resetGame();
-        // wait for layout
         setTimeout(() => {
           resizeCanvas();
           gameActive = true;
-          lastTime = performance.now();
           overlay.classList.add('show');
-          gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
-          gameMsg.className = 'game-msg info';
-          canvasMsg.classList.remove('show', 'win', 'fail');
+          requestAnimationFrame(loop);
 
-          // start render loop
-          cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(loop);
+          timerId = setInterval(() => {
+            if (!gameActive) return;
+            timeLeft -= 0.1;
+            if (timeLeft < 0) timeLeft = 0;
+            timerText.textContent = timeLeft.toFixed(1) + 's';
+            if (timeLeft <= 5) timerText.classList.add('timer-low');
+            if (timeLeft <= 0) {
+              winGame();
+            }
+          }, 100);
         }, 50);
       }
 
+      // Input
+      window.addEventListener('keydown', (e) => {
+        if (e.key === ' ' || e.key === 'Space') {
+          if (overlay.classList.contains('show')) {
+            e.preventDefault();
+            jump();
+          }
+        }
+      });
+
+      // Touch input
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        jump();
+      }, { passive: false });
+
       closeGameBtn.addEventListener('click', function() {
         gameActive = false;
-        cancelAnimationFrame(rafId);
+        clearInterval(timerId);
         overlay.classList.remove('show');
         canvasMsg.classList.remove('show', 'win', 'fail');
         metaHint.innerHTML = '<span class="dot"></span><span>Identity verification cancelled — click the field to retry</span>';
@@ -1015,15 +842,9 @@
       metaInput.addEventListener('paste', e => e.preventDefault());
       metaInput.addEventListener('copy', e => e.preventDefault());
 
-      // global listeners
       window.addEventListener('resize', () => {
         if (overlay.classList.contains('show') && gameActive) resizeCanvas();
       });
-      window.addEventListener('keydown', onKeyDown);
-      window.addEventListener('keyup', onKeyUp);
-
-      // init
-      addTouchControls();
     })();
   </script>
 </body>
