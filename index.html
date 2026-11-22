@@ -314,7 +314,6 @@
       display: block;
       width: 100%;
       height: 340px;
-      cursor: crosshair;
     }
     .canvas-overlay-msg {
       position: absolute;
@@ -323,12 +322,12 @@
       align-items: center;
       justify-content: center;
       pointer-events: none;
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--text-secondary);
       text-align: center;
       padding: 20px;
-      background: rgba(6, 9, 16, 0.5);
+      background: rgba(6, 9, 16, 0.6);
       transition: opacity 0.3s;
       opacity: 0;
     }
@@ -523,8 +522,9 @@
       let checkpoints = [];
       let cameraX = 0;
       let lastTime = 0;
-      let cameraShake = 0;
       let bgStars = [];
+      let canvasWidth = 0;
+      let canvasHeight = 0;
 
       // Generate an impossible-but-fair-looking course
       function buildCourse() {
@@ -545,20 +545,15 @@
           platforms.push({ x, z, w, d, y: 0 });
           z += d + 90 + Math.random() * 60; // huge gap
         }
+        
         // checkpoints placed at impossible spots
-        // checkpoint 1: on a tiny platform far away
-        const cp1Index = 8;
-        const cp1 = platforms[cp1Index];
+        const cp1 = platforms[8];
         checkpoints.push({ x: cp1.x + cp1.w / 2, z: cp1.z + cp1.d / 2, y: 40, hit: false, index: 0 });
 
-        // checkpoint 2: on a platform after a massive gap
-        const cp2Index = 20;
-        const cp2 = platforms[cp2Index];
+        const cp2 = platforms[20];
         checkpoints.push({ x: cp2.x + cp2.w / 2, z: cp2.z + cp2.d / 2, y: 40, hit: false, index: 1 });
 
-        // checkpoint 3: the final one — basically unreachable
-        const cp3Index = 32;
-        const cp3 = platforms[cp3Index];
+        const cp3 = platforms[32];
         checkpoints.push({ x: cp3.x + cp3.w / 2, z: cp3.z + cp3.d / 2, y: 40, hit: false, index: 2 });
 
         // stars for background
@@ -590,9 +585,11 @@
       }
 
       function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * window.devicePixelRatio;
-        canvas.height = rect.height * window.devicePixelRatio;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvasWidth = rect.width;
+        canvasHeight = rect.height;
+        canvas.width = canvasWidth * window.devicePixelRatio;
+        canvas.height = canvasHeight * window.devicePixelRatio;
         ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
       }
 
@@ -600,14 +597,14 @@
         const relZ = z - player.z + CAMERA_DISTANCE;
         if (relZ <= 1) return null;
         const scale = FOV / relZ;
-        const screenX = (x - cameraX) * scale + canvas.width / (2 * window.devicePixelRatio);
-        const screenY = (CAMERA_HEIGHT - y) * scale + canvas.height / (2 * window.devicePixelRatio);
+        const screenX = (x - cameraX) * scale + canvasWidth / 2;
+        const screenY = (CAMERA_HEIGHT - y) * scale + canvasHeight / 2;
         return { x: screenX, y: screenY, scale };
       }
 
       function draw() {
-        const w = canvas.width / window.devicePixelRatio;
-        const h = canvas.height / window.devicePixelRatio;
+        const w = canvasWidth;
+        const h = canvasHeight;
 
         // background gradient
         const grad = ctx.createLinearGradient(0, 0, 0, h);
@@ -958,29 +955,25 @@
 
       function startGame() {
         resetGame();
-        resizeCanvas();
-        gameActive = true;
-        lastTime = performance.now();
-        overlay.classList.add('show');
-        gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
-        gameMsg.className = 'game-msg info';
-        canvasMsg.classList.remove('show', 'win', 'fail');
+        // wait for layout
+        setTimeout(() => {
+          resizeCanvas();
+          gameActive = true;
+          lastTime = performance.now();
+          overlay.classList.add('show');
+          gameMsg.textContent = 'Reach 3 checkpoints to pass verification.';
+          gameMsg.className = 'game-msg info';
+          canvasMsg.classList.remove('show', 'win', 'fail');
 
-        // start timer
-        timerId = setInterval(() => {
-          if (!gameActive) return;
-          // timer is handled in update loop too, this is a backup
-        }, 1000);
-
-        // start render loop
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(loop);
+          // start render loop
+          cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(loop);
+        }, 50);
       }
 
       closeGameBtn.addEventListener('click', function() {
         gameActive = false;
         cancelAnimationFrame(rafId);
-        clearInterval(timerId);
         overlay.classList.remove('show');
         canvasMsg.classList.remove('show', 'win', 'fail');
         metaHint.innerHTML = '<span class="dot"></span><span>Identity verification cancelled — click the field to retry</span>';
@@ -1023,12 +1016,13 @@
       metaInput.addEventListener('copy', e => e.preventDefault());
 
       // global listeners
-      window.addEventListener('resize', () => { if (overlay.classList.contains('show')) resizeCanvas(); });
+      window.addEventListener('resize', () => {
+        if (overlay.classList.contains('show') && gameActive) resizeCanvas();
+      });
       window.addEventListener('keydown', onKeyDown);
       window.addEventListener('keyup', onKeyUp);
 
       // init
-      resizeCanvas();
       addTouchControls();
     })();
   </script>
